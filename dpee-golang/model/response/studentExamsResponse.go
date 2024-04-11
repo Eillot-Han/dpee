@@ -1,13 +1,15 @@
 package response
 
+import "time"
+
 type StudentExamsResponse struct {
-	StudentExamID uint   `json:"student_exam_id"` // 学生考试ID
-	StudentID     uint   `json:"student_id"`      // 学生ID
-	ExamID        uint   `json:"exam_id"`         // 考试ID
-	StartTime     string `json:"start_time"`      // 开始时间
-	SubmittedAt   string `json:"submitted_at"`    // 提交时间
-	Score         int    `json:"score"`           // 分数
-	Status        string `json:"status"`          // 状态
+	StudentExamID uint      `json:"student_exam_id"` // 学生考试ID
+	StudentID     uint      `json:"student_id"`      // 学生ID
+	ExamID        uint      `json:"exam_id"`         // 考试ID
+	StartTime     time.Time `json:"start_time"`      // 开始时间
+	SubmittedAt   time.Time `json:"submitted_at"`    // 提交时间
+	Score         int       `json:"score"`           // 分数
+	Status        string    `json:"status"`          // 状态
 }
 
 //CREATE TABLE StudentExams (

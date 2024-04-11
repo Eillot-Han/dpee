@@ -1,14 +1,16 @@
 package response
 
+import "time"
+
 type NotificationsResponse struct {
-	NotificationID uint   `json:"notification_id"` //消息ID
-	UserID         uint   `json:"user_id"`         //用户ID
-	Title          string `json:"title"`           //消息标题
-	Message        string `json:"message"`         //消息内容
-	Type           string `json:"type"`            //消息类型
-	CreateAt       string `json:"create_at"`       //消息创建时间
-	SentAt         string `json:"sent_at"`         //消息发送时间
-	ReadAt         string `json:"read_at"`         //消息阅读时间
+	NotificationID uint      `json:"notification_id"` //消息ID
+	UserID         uint      `json:"user_id"`         //用户ID
+	Title          string    `json:"title"`           //消息标题
+	Message        string    `json:"message"`         //消息内容
+	Type           string    `json:"type"`            //消息类型
+	CreateAt       time.Time `json:"create_at"`       //消息创建时间
+	SentAt         time.Time `json:"sent_at"`         //消息发送时间
+	ReadAt         time.Time `json:"read_at"`         //消息阅读时间
 }
 
 //CREATE TABLE Notifications (

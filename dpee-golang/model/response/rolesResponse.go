@@ -1,10 +1,12 @@
 package response
 
+import "time"
+
 type RolesResponse struct {
-	RoleID      uint   `json:"role_id"`     // 角色ID
-	RoleName    string `json:"role_name"`   // 角色名称
-	Description string `json:"description"` // 角色描述
-	CreateAt    string `json:"create_at"`   // 创建时间
+	RoleID      uint      `json:"role_id"`     // 角色ID
+	RoleName    string    `json:"role_name"`   // 角色名称
+	Description string    `json:"description"` // 角色描述
+	CreateAt    time.Time `json:"create_at"`   // 创建时间
 }
 
 //CREATE TABLE Roles (

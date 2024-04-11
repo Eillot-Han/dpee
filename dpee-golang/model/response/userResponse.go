@@ -1,17 +1,19 @@
 package response
 
+import "time"
+
 type UserResponse struct {
-	UserID    uint   `json:"user_id"`    // 用户ID
-	Username  string `json:"username"`   // 用户名
-	Password  string `json:"password"`   // 密码
-	Sex       string `json:"sex"`        // 性别
-	Email     string `json:"email"`      // 邮箱
-	Phone     string `json:"phone"`      // 手机号
-	FirstName string `json:"first_name"` // 姓
-	LastName  string `json:"last_name"`  // 名
-	UserRole  string `json:"user_role"`  // 角色
-	UserClass string `json:"user_class"` // 班级
-	CreateAt  string `json:"create_at"`  // 创建时间
+	UserID    uint      `json:"user_id"`    // 用户ID
+	Username  string    `json:"username"`   // 用户名
+	Password  string    `json:"password"`   // 密码
+	Sex       string    `json:"sex"`        // 性别
+	Email     string    `json:"email"`      // 邮箱
+	Phone     string    `json:"phone"`      // 手机号
+	FirstName string    `json:"first_name"` // 姓
+	LastName  string    `json:"last_name"`  // 名
+	UserRole  string    `json:"user_role"`  // 角色
+	UserClass string    `json:"user_class"` // 班级
+	CreateAt  time.Time `json:"create_at"`  // 创建时间
 }
 
 //CREATE TABLE Users (
