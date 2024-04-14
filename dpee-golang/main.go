@@ -14,6 +14,11 @@ func main() {
 	db, _ := global.DB.DB()
 	defer db.Close()
 
+	// 初始化数据库
+	global.TestDB = initialize.TestGorm()
+	testdb, _ := global.TestDB.DB()
+	defer testdb.Close()
+
 	// 初始化redis
 	Client := redis.NewClient(&redis.Options{
 		Addr:     "localhost:6379",

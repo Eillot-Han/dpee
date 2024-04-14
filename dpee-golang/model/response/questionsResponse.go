@@ -1,17 +1,12 @@
 package response
 
-import "time"
-
 type QuestionsResponse struct {
-	QuestionID      uint      `json:"question_id"`      // 题目ID
-	ExamID          uint      `json:"exam_id"`          // 考试ID
-	QuestionContent string    `json:"question_content"` // 题目内容
-	AnswerType      string    `json:"answer_type"`      // 答案类型
-	Answer          string    `json:"answer"`           // 答案
-	Points          int       `json:"points"`           // 分值
-	CreateBy        uint      `json:"create_by"`        // 创建者
-	CreateAt        time.Time `json:"create_at"`        // 创建时间
-	UpdateAt        time.Time `json:"update_at"`        // 更新时间
+	QuestionID      uint   `json:"question_id"`      // 题目ID
+	QuestionContent string `json:"question_content"` // 题目内容
+	Type            string `json:"type"`
+	Points          int    `json:"points"`     // 分值
+	Difficulty      int    `json:"difficulty"` // 难度
+	CreateBy        uint   `json:"create_by"`  // 创建者
 }
 
 //CREATE TABLE Questions (

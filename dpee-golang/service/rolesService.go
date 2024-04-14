@@ -85,3 +85,55 @@ func DeleteRoles(context *gin.Context) {
 	db.Where("role_id = ?", accountInt).Delete(&model.Roles{})
 	response.OkWithMessage("删除成功", context)
 }
+
+// IsAdmin 判断是否为管理员
+func IsAdmin(account int) bool {
+	db := global.DB
+	var roles model.Roles
+	db.Where("role_id = ?", account).First(&roles)
+	if roles.RoleName == "Admin" {
+		return true
+	}
+	return false
+}
+
+// IsTeacher 判断是否为老师
+func IsTeacher(account int) bool {
+	db := global.DB
+	var roles model.Roles
+	db.Where("role_id = ?", account).First(&roles)
+	if roles.RoleName == "Teacher" {
+		return true
+	}
+	return false
+}
+
+// IsStudent 判断是否为学生
+func IsStudent(account int) bool {
+	db := global.DB
+	var roles model.Roles
+	db.Where("role_id = ?", account).First(&roles)
+	if roles.RoleName == "Student" {
+		return true
+	}
+	return false
+}
+
+// CheckRoles 判断权限
+func CheckRoles(c *gin.Context) {
+	account := c.GetInt("account")
+	if IsAdmin(account) {
+		response.OkWithMessage("管理员", c)
+		return
+	}
+	if IsTeacher(account) {
+		response.OkWithMessage("老师", c)
+		return
+	}
+	if IsStudent(account) {
+		response.OkWithMessage("学生", c)
+		return
+	}
+	response.FailWithMessage("权限不足", c)
+	c.Abort()
+}

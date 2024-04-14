@@ -15,5 +15,5 @@ func RegisterCourses(r *gin.RouterGroup) {
 	r.DELETE("/deleteCourses", service.DeleteCourses)
 	r.PUT("/updateCourseDescription", service.UpdateCourseDescription)
 	r.PUT("/updateCourseTeacher", service.UpdateCourseTeacher)
-
+	r.DELETE("/deleteStudentFromClass", service.DeleteStudentFromClass)
 }

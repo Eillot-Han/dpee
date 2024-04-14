@@ -3,11 +3,12 @@ package response
 import "time"
 
 type ExamsResponse struct {
-	ExamsID         uint      `json:"exams_id"`         // 考试ID
-	ExamsName       string    `json:"exams_name"`       // 考试名称
-	Description     string    `json:"description"`      // 考试描述
-	SubjectID       uint      `json:"subject_id"`       // 考试科目ID
-	Location        string    `json:"location"`         // 考试地点
+	ExamsID         uint      `json:"exams_id"`    // 考试ID
+	ExamsName       string    `json:"exams_name"`  // 考试名称
+	Description     string    `json:"description"` // 考试描述
+	SubjectID       uint      `json:"subject_id"`  // 考试科目ID
+	Location        string    `json:"location"`    // 考试地点
+	ClassID         uint      `json:"class_id"`
 	StartTime       time.Time `json:"start_time"`       // 考试开始时间
 	EndTime         time.Time `json:"end_time"`         // 考试结束时间
 	DurationMinutes int       `json:"duration_minutes"` // 考试时长

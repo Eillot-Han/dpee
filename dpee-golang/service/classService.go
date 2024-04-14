@@ -130,3 +130,22 @@ func IsStudentInClass(classId int, studentId int) bool {
 	}
 	return false
 }
+
+// DeleteStudentFromClass 删除学生从班级中
+func DeleteStudentFromClass(c *gin.Context) {
+	classId := c.PostForm("class_id")
+	classIdInt, _ := strconv.Atoi(classId)
+	studentId := c.PostForm("student_id")
+	studentIdInt, _ := strconv.Atoi(studentId)
+	if !IsStudentInClass(classIdInt, studentIdInt) {
+		response.FailWithMessage("学生不在班级中", c)
+		return
+	}
+	db := global.DB
+	db.Model(&model.Classes{}).Where("class_id = ?", classIdInt).Association("Students").Delete(&model.UserClasses{
+		UserID:  uint(studentIdInt),
+		ClassID: uint(classIdInt),
+	})
+	db.Where("class_id = ?", classIdInt).Update("student_count", gorm.Expr("student_count - ?", 1))
+	response.OkWithMessage("学生删除成功", c)
+}

@@ -13,4 +13,5 @@ func RegisterRoles(r *gin.RouterGroup) {
 	r.GET("/showRolesByID", service.ShowRolesByID)
 	r.GET("/showRolesByName", service.ShowRolesByName)
 	r.DELETE("/deleteRoles", service.DeleteRoles)
+	r.GET("/checkRoles", service.CheckRoles)
 }

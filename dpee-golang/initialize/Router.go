@@ -25,5 +25,17 @@ func Routers() *gin.Engine {
 	{
 		router.RegisterClass(class)
 	}
+	questions := r.Group("/questions")
+	{
+		router.RegisterQuestions(questions)
+	}
+	exams := r.Group("/exams")
+	{
+		router.RegisterExams(exams)
+	}
+	correction := r.Group("/correction")
+	{
+		router.RegisterCorrection(correction)
+	}
 	return r
 }

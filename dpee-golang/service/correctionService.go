@@ -1,0 +1,136 @@
+package service
+
+import (
+	"dpee-golang/global"
+	"dpee-golang/model"
+	"dpee-golang/model/response"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"strconv"
+)
+
+//初步设定提交的同时开始修改试卷，也就是状态一经改变就开始批改试卷
+
+// Correction 自动批改试卷
+func Correction(examID int) {
+	//通过examid搜索studentAnswer,然后遍历进行批改答案
+	studentAnswer := GetStudentAnswerByExamID(examID)
+	for _, v := range studentAnswer {
+		//通过questionid搜索question
+		question := GetQuestionByID(v.QuestionID)
+		CorrectionAnswer(v, question)
+	}
+	//更改状态为已批改
+	UpdateStatus(examID)
+	//更新分数
+	UpdateStudentScore(examID)
+}
+
+// Correction 自动批改试卷
+func Correction1(c *gin.Context) {
+	examID := c.Param("exam_id")
+	examID1, _ := strconv.Atoi(examID)
+	//通过examid搜索studentAnswer,然后遍历进行批改答案
+	studentAnswer := GetStudentAnswerByExamID(examID1)
+	for _, v := range studentAnswer {
+		//通过questionid搜索question
+		question := GetQuestionByID(v.QuestionID)
+		CorrectionAnswer(v, question)
+	}
+	//更改状态为已批改
+	UpdateStatus(examID1)
+	//更新分数
+	UpdateStudentScore(examID1)
+	response.OkWithMessage("批改成功", c)
+}
+
+// GetStudentAnswerByExamID 搜索studentAnswer
+func GetStudentAnswerByExamID(examID int) []model.StudentAnswers {
+	var studentAnswer []model.StudentAnswers
+	db := global.DB
+	db.Where("exam_id = ?", examID).Find(&studentAnswer)
+	return studentAnswer
+}
+
+// GetQuestionByID 搜索question
+func GetQuestionByID(questionID uint) model.Questions {
+	var question model.Questions
+	db := global.DB
+	db.Where("question_id = ?", questionID).Find(&question)
+	return question
+}
+
+//CorrectionAnswer 批改答案
+func CorrectionAnswer(studentAnswer model.StudentAnswers, question model.Questions) {
+	//通过question的type进行判断
+	db2 := global.TestDB
+	db := global.DB
+
+	//通过createTable创建一个临时表，createTable中是完整的建表sql
+	db2.Exec(question.CreateTable)
+	Answer1 := db2.Exec(studentAnswer.Answer)
+	db2.Exec(question.DeleteTable)
+	//创建一个临时表，然后插入studentAnswer的答案，然后插入question的答案
+	db2.Exec(question.CreateTable)
+	Answer2 := db2.Exec(question.Answer)
+	db2.Exec(question.DeleteTable)
+
+	if Answer1.RowsAffected == Answer2.RowsAffected {
+		//如果相等，则将pointsAwarded设置为points
+		db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", question.Points)
+	} else {
+		//如果不相等，则将pointsAwarded设置为0
+		db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", 0)
+	}
+}
+
+// UpdateScore 教师更改成绩
+func UpdateScore(c *gin.Context) {
+	var studentAnswer model.StudentAnswers
+	studentExamID := c.PostForm("student_exam_id")
+	questionID := c.PostForm("question_id")
+	pointsAwarded := c.PostForm("points_awarded")
+	studentExamIDInt, _ := strconv.Atoi(studentExamID)
+	questionIDInt, _ := strconv.Atoi(questionID)
+	pointsAwardedInt, _ := strconv.Atoi(pointsAwarded)
+	db := global.DB
+	db.Model(&studentAnswer).Where("student_exam_id = ? and question_id = ?", studentExamIDInt, questionIDInt).Update("points_awarded", pointsAwardedInt)
+	response.OkWithData("修改成功", c)
+}
+
+//UpdateStudentScore 更新学生成绩
+func UpdateStudentScore(examID int) {
+	//获取studentAnswer列表
+	studentAnswer := GetStudentAnswerByExamID(examID)
+	db := global.DB
+	for _, v := range studentAnswer {
+		//获取pointsAwarded
+		var pointsAwarded int
+		db.Model(&v).Where("student_answer_id = ?", v.StudentAnswerID).Select("points_awarded").Scan(&pointsAwarded)
+		//更新studentExam的score score += pointsAwarded
+		db.Model(&model.StudentExams{}).Where("student_exam_id = ?", v.StudentExamID).Update("score", gorm.Expr("score + ?", pointsAwarded))
+	}
+}
+
+// GetStudentScore 返回学生成绩在表StudentExams
+func GetStudentScore(c *gin.Context) {
+	studentExamID := c.Query("student_exam_id")
+	studentExamIDInt, _ := strconv.Atoi(studentExamID)
+	response.OkWithData(GetStudentScoreByID(studentExamIDInt), c)
+}
+
+//GetStudentScoreByID 搜索学生成绩
+func GetStudentScoreByID(studentExamID int) model.StudentExams {
+	var studentExam model.StudentExams
+	db := global.DB
+	db.Where("student_exam_id = ?", studentExamID).Find(&studentExam)
+	return studentExam
+}
+
+// GetStudentExams studentExams成绩导出
+func GetStudentExams(c *gin.Context) {
+	examID := c.Query("exam_id")
+	examIDInt, _ := strconv.Atoi(examID)
+	studentExamList := GetStudentExamListByExamID(examIDInt)
+	response.OkWithData(studentExamList, c)
+}

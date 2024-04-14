@@ -8,6 +8,7 @@ type Exams struct {
 	Description     string    `json:"description" gorm:"column:description"`
 	SubjectID       uint      `json:"subject_id" gorm:"column:subject_id"`
 	Location        string    `json:"location" gorm:"column:location"`
+	ClassID         uint      `json:"class_id" gorm:"column:class_id"`
 	StartTime       time.Time `json:"start_time" gorm:"column:start_time"`
 	EndTime         time.Time `json:"end_time" gorm:"column:end_time"`
 	DurationMinutes int       `json:"duration_minutes" gorm:"column:duration_minutes"`
