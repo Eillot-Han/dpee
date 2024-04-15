@@ -5,6 +5,7 @@ import (
 	"dpee-golang/model"
 	"dpee-golang/model/response"
 	"github.com/gin-gonic/gin"
+	"regexp"
 	"sort"
 	"strconv"
 )
@@ -39,6 +40,21 @@ func Enroll(c *gin.Context) {
 
 	if DuplicateQueryAccount(accountInt) {
 		response.FailWithMessage("账号已存在", c)
+		return
+	}
+	//判断手机格式
+	if !CheckPhone(phone) {
+		response.FailWithMessage("手机格式错误", c)
+		return
+	}
+	//判断邮箱格式
+	if !CheckEmail(email) {
+		response.FailWithMessage("邮箱格式错误", c)
+		return
+	}
+	//判断密码格式
+	if !CheckPassword(password) {
+		response.FailWithMessage("密码格式错误", c)
 		return
 	}
 
@@ -239,4 +255,25 @@ func ShowAllUser(context *gin.Context) {
 	db.Find(&users)
 	SortByName(users)
 	response.OkWithData(users, context)
+}
+
+// CheckPhone 检查手机格式
+func CheckPhone(phone string) bool {
+	reg := `^1[3|4|5|7|8][0-9]\d{8}$`
+	rgx := regexp.MustCompile(reg)
+	return rgx.MatchString(phone)
+}
+
+// CheckEmail 检查邮箱格式
+func CheckEmail(email string) bool {
+	reg := `^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$`
+	rgx := regexp.MustCompile(reg)
+	return rgx.MatchString(email)
+}
+
+// CheckPassword 判断密码格式
+func CheckPassword(password string) bool {
+	reg := `^[a-zA-Z0-9]{6,16}$`
+	rgx := regexp.MustCompile(reg)
+	return rgx.MatchString(password)
 }

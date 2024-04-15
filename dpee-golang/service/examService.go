@@ -22,6 +22,20 @@ func ExtractQuestionsByType(c *gin.Context) {
 	response.OkWithData(questions, c)
 }
 
+// MergeExams 合并两份试卷 将试卷2的题目写入试卷1
+func MergeExams(c *gin.Context) {
+	examID1 := c.Query("examID1")
+	examID2 := c.Query("examID2")
+	examID1Int, _ := strconv.Atoi(examID1)
+	examID2Int, _ := strconv.Atoi(examID2)
+	questions := getQuestionsByExamID(uint(examID2Int))
+	createExamQuestion(uint(examID1Int), questions)
+	deleteExamQuestion(uint(examID2Int))
+	//删除试卷2
+	deleteExam(uint(examID2Int))
+	response.OkWithData(questions, c)
+}
+
 // 根据标签抽取题目
 func extractQuestionsByType(questionType string, num int) []response.QuestionsResponse {
 	var questions []response.QuestionsResponse
@@ -92,6 +106,20 @@ func createExamQuestion(examID uint, questions []response.QuestionsResponse) {
 		examQuestion.QuestionID = question.QuestionID
 		db.Create(&examQuestion)
 	}
+}
+
+//解除试卷和题目的关系
+func deleteExamQuestion(examID uint) {
+	var examQuestionList []model.ExamQuestionList
+	db := global.DB
+	db.Where("exam_id = ?", examID).Delete(&examQuestionList)
+}
+
+//删除试卷
+func deleteExam(examID uint) {
+	var exam model.Exams
+	db := global.DB
+	db.Where("exams_id = ?", examID).Delete(&exam)
 }
 
 // 根据试卷ID获取题目

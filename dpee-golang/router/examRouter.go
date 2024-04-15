@@ -28,6 +28,8 @@ func RegisterExams(r *gin.RouterGroup) {
 	r.GET("/getExamEndTime", service.GetExamEndTime)
 	r.POST("/getStatus", service.GetStatus)
 	r.GET("/exportExam", service.ExportExam)
+	r.GET("/mergeExams", service.MergeExams)
+
 }
 
 //选定试卷所属班级等于发布试卷

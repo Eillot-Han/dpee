@@ -82,7 +82,8 @@ CREATE TABLE questions
     Create_By        INT,
     Create_At        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     Update_At        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_questions_created_by FOREIGN KEY (Create_By) REFERENCES Users (User_ID)
+    CONSTRAINT fk_questions_created_by FOREIGN KEY (Create_By) REFERENCES Users (User_ID),
+    FOREIGN KEY (Question_ID) REFERENCES Questions (Question_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE roles
 (
@@ -106,7 +107,9 @@ CREATE TABLE student_answers
     Question_ID       INT  NOT NULL,
     Answer            TEXT NOT NULL,
     Points_Awarded    INT,
-    Create_At         TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    Create_At         TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (Student_Exam_ID) REFERENCES student_exams (Student_Exam_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Question_ID) REFERENCES Questions (Question_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
 CREATE TABLE student_exams
 (
@@ -135,10 +138,10 @@ CREATE TABLE user_classes
 
 CREATE TABLE exam_question_list
 (
-    Question_Number SERIAL PRIMARY KEY, -- 序号，自增长序列
-    Question_ID     INT NOT NULL,       -- 题目ID
-    Exam_ID         INT NOT NULL,       -- 试卷ID，外键关联到Exams表
+    Question_Number SERIAL PRIMARY KEY,
+    Question_ID     INT NOT NULL,
+    Exam_ID         INT NOT NULL,
 
-    -- 添加外键约束，确保试卷ID对应的有效性
-    FOREIGN KEY (Exam_ID) REFERENCES Exams (Exam_ID) ON DELETE CASCADE ON UPDATE CASCADE
+    FOREIGN KEY (Exam_ID) REFERENCES Exams (Exam_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Question_ID) REFERENCES Questions (Question_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -26,7 +26,7 @@ func Correction(examID int) {
 	UpdateStudentScore(examID)
 }
 
-// Correction 自动批改试卷
+// Correction1 自动批改试卷
 func Correction1(c *gin.Context) {
 	examID := c.Param("exam_id")
 	examID1, _ := strconv.Atoi(examID)
@@ -134,3 +134,61 @@ func GetStudentExams(c *gin.Context) {
 	studentExamList := GetStudentExamListByExamID(examIDInt)
 	response.OkWithData(studentExamList, c)
 }
+
+// CheckSQL 检查sql语法
+func CheckSQL(sql string) bool {
+	db := global.TestDB
+	err := db.Exec(sql).Error
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+//type SQLStatement struct {
+//	// 包含SQL语句各个部分的信息
+//	SQL       string
+//	UsesIndex bool
+//	AvoidsSubquery bool
+//	UsesSubquery bool
+//	UsesJoin bool
+//	UsesWhere bool
+//	UsesGroupBy bool
+//	UsesOrderBy bool
+//	UsesLimit bool
+//	UsesHaving bool
+//	UsesDistinct bool
+//	UsesUnion bool
+//	UsesOffset bool
+//}
+//
+//func ParseSQL(sql string) (*SQLStatement, error) {
+//	lexer := NewSQLLexer(sql)
+//	parser := NewSQLParser(lexer)
+//	stmt, err := parser.Parse()
+//	if err != nil {
+//		return nil, err
+//	}
+//	return stmt, nil
+//}
+//
+//func CheckSQLSemantics(stmt *SQLStatement) error {
+//	// 检查表和字段是否存在，JOIN条件是否合理等
+//
+//	return nil // 或者返回错误
+//}
+//
+//func ScoreSQLPerformance(stmt *SQLStatement) int {
+//	score := 0
+//	// 根据SQL语句结构和特征给予评分
+//	if stmt.UsesIndex {
+//		score += 10
+//	}
+//	if stmt.AvoidsSubquery {
+//		score += 5
+//	}
+//	// 更多评分规则...
+//	return score
+//}
+
+//负载均衡
