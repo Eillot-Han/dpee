@@ -80,7 +80,7 @@ func RandomSelect(questionList []model.Questions, num int) []model.Questions {
 	return result
 }
 
-//随机生成试卷ID并判断是否已存在
+// 随机生成试卷ID并判断是否已存在
 func createExam(num int) uint {
 	var exam model.Exams
 	db := global.DB
@@ -108,14 +108,14 @@ func createExamQuestion(examID uint, questions []response.QuestionsResponse) {
 	}
 }
 
-//解除试卷和题目的关系
+// 解除试卷和题目的关系
 func deleteExamQuestion(examID uint) {
 	var examQuestionList []model.ExamQuestionList
 	db := global.DB
 	db.Where("exam_id = ?", examID).Delete(&examQuestionList)
 }
 
-//删除试卷
+// 删除试卷
 func deleteExam(examID uint) {
 	var exam model.Exams
 	db := global.DB
@@ -243,6 +243,59 @@ func ShowExamByUserID(c *gin.Context) {
 		examResponse.Location = exam.Location
 		examResponse.StartTime = exam.StartTime
 		examResponse.SubjectID = exam.SubjectID
+		examResponseList = append(examResponseList, examResponse)
+	}
+	response.OkWithData(examResponseList, c)
+}
+
+// 根据学生id显示存在开始时间和结束时间的试卷
+func ShowExamStartTime(c *gin.Context) {
+	userID := c.Query("user_id")
+	userIDInt, _ := strconv.Atoi(userID)
+	if userIDInt == 0 {
+		response.FailWithMessage("用户ID不能为空", c)
+		return
+	}
+	//搜索用户ID
+	var user model.User
+	db := global.DB
+	db.Where("user_id = ?", userIDInt).First(&user)
+	if user.UserID == 0 {
+		response.FailWithMessage("用户不存在", c)
+		return
+	}
+	//根据用户ID获取班级ID
+	var userClasses model.UserClasses
+	db.Where("user_id = ?", userIDInt).First(&userClasses)
+	if userClasses.ClassID == 0 {
+		response.FailWithMessage("用户未加入班级", c)
+		return
+	}
+	//根据班级ID获取试卷
+	var examList []model.Exams
+	db.Where("class_id = ?", userClasses.ClassID).Find(&examList)
+	if len(examList) == 0 {
+		response.FailWithMessage("该班级没有试卷", c)
+		return
+	}
+	var examResponseList []response.ExamsResponse
+	for _, exam := range examList {
+		var examResponse response.ExamsResponse
+		examResponse.CreateAt = exam.CreateAt
+		examResponse.CreateBy = exam.CreateBy
+		examResponse.ClassID = exam.ClassID
+		examResponse.Description = exam.Description
+		examResponse.DurationMinutes = exam.DurationMinutes
+		examResponse.EndTime = exam.EndTime
+		examResponse.ExamsID = exam.ExamsID
+		examResponse.ExamsName = exam.ExamsName
+		examResponse.Location = exam.Location
+		examResponse.StartTime = exam.StartTime
+		examResponse.SubjectID = exam.SubjectID
+		//判断开始时间和结束时间不为空
+		if !examResponse.StartTime.IsZero() && !examResponse.EndTime.IsZero() {
+			examResponseList = append(examResponseList, examResponse)
+		}
 	}
 	response.OkWithData(examResponseList, c)
 }
@@ -318,11 +371,6 @@ func CreateExam(c *gin.Context) {
 		response.FailWithMessage("创建试卷失败", c)
 		return
 	}
-	//if endTime != "" {
-	//	//设置定时器
-	//
-	//
-	//}
 	response.OkWithMessage("创建试卷成功", c)
 }
 
@@ -377,6 +425,11 @@ func UpdateExam(c *gin.Context) {
 	totalQuestion := c.Query("total_question")
 	totalQuestionInt, _ := strconv.Atoi(totalQuestion)
 	db := global.DB
+	//判断时间有效性
+	if starttime.After(endtime) {
+		response.FailWithMessage("结束时间不能早于开始时间", c)
+		return
+	}
 	if err := db.Model(&model.Exams{}).Where("exams_id = ?", examsIDInt).Updates(model.Exams{
 		ExamsName:       examsName,
 		SubjectID:       uint(subjectIDInt),
@@ -464,7 +517,7 @@ func GetExamStartTime(c *gin.Context) {
 	response.OkWithData(time.Until(exam.StartTime), c)
 }
 
-//	GetExamEndTime 计算考试结束剩余时间
+// GetExamEndTime 计算考试结束剩余时间
 func GetExamEndTime(c *gin.Context) {
 	examID := c.Query("exam_id")
 	examIDInt, _ := strconv.Atoi(examID)
@@ -529,6 +582,7 @@ func SubmitAnswer(c *gin.Context) {
 	}
 	questionID := c.Query("question_id")
 	questionIDInt, _ := strconv.Atoi(questionID)
+	answer := c.Query("answer")
 	//根据学生id和试卷id查询studentExam表
 	db := global.DB
 	var studentExam model.StudentExams
@@ -547,17 +601,56 @@ func SubmitAnswer(c *gin.Context) {
 		//创建
 		studentAnswer.StudentExamID = studentExam.StudentExamID
 		studentAnswer.QuestionID = uint(questionIDInt)
-		studentAnswer.Answer = c.Query("answer")
+		studentAnswer.Answer = answer
 		if err := db.Create(&studentAnswer).Error; err != nil {
 			response.FailWithMessage("创建学生答案失败", c)
 			return
 		}
 		response.OkWithMessage("创建学生答案成功", c)
-	}
-	if err := db.Model(&studentAnswer).Updates(model.StudentAnswers{Answer: c.Query("answer")}).Error; err != nil {
-		response.FailWithMessage("更新学生答案失败", c)
 		return
 	}
+	if err := db.Model(&studentAnswer).Updates(model.StudentAnswers{Answer: answer}).Error; err != nil {
+		response.FailWithMessage("更新学生答案失败", c)
+		return
+	} else {
+		response.OkWithMessage("更新学生答案成功", c)
+	}
+}
+
+// BackStudentAnswerByExamID 根据ExamId和StudentId查询学生答案
+func BackStudentAnswerByExamID(c *gin.Context) {
+	examID := c.Query("exam_id")
+	examIDInt, _ := strconv.Atoi(examID)
+	if examIDInt == 0 {
+		response.FailWithMessage("试卷ID不能为空", c)
+		return
+	}
+	studentID := c.Query("student_id")
+	studentIDInt, _ := strconv.Atoi(studentID)
+	if studentIDInt == 0 {
+		response.FailWithMessage("学生ID不能为空", c)
+		return
+	}
+	questionID := c.Query("question_id")
+	questionIDInt, _ := strconv.Atoi(questionID)
+	if questionIDInt == 0 {
+		response.FailWithMessage("题目ID不能为空", c)
+		return
+	}
+	//根据学生id和试卷id查询studentExam 表
+	db := global.DB
+	var studentExam model.StudentExams
+	if err := db.Where("student_id = ? and exam_id = ?", studentIDInt, examIDInt).First(&studentExam).Error; err != nil {
+		response.FailWithMessage("查询学生考试失败", c)
+		return
+	}
+	//根据学生考试id和题目id查询studentAnswer表
+	var studentAnswer model.StudentAnswers
+	if err := db.Where("student_exam_id = ? and question_id = ?", studentExam.StudentExamID, questionIDInt).First(&studentAnswer).Error; err != nil {
+		response.FailWithMessage("查询学生答案失败", c)
+		return
+	}
+	response.OkWithData(studentAnswer.Answer, c)
 }
 
 // SubmitExam 提交试卷更新studentExam
@@ -728,7 +821,7 @@ func GetStatus(c *gin.Context) {
 	}, c)
 }
 
-//GetStudentExamListByExamID 根据examID获取学生考试列表
+// GetStudentExamListByExamID 根据examID获取学生考试列表
 func GetStudentExamListByExamID(examIDInt int) []model.StudentExams {
 	db := global.DB
 	var studentExams []model.StudentExams

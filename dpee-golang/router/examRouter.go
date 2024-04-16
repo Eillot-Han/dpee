@@ -29,7 +29,7 @@ func RegisterExams(r *gin.RouterGroup) {
 	r.POST("/getStatus", service.GetStatus)
 	r.GET("/exportExam", service.ExportExam)
 	r.GET("/mergeExams", service.MergeExams)
-
+	r.GET("/backStudentAnswerByExamID", service.BackStudentAnswerByExamID)
 }
 
 //选定试卷所属班级等于发布试卷
