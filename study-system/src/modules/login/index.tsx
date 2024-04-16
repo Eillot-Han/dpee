@@ -1,10 +1,10 @@
 import { LOGIN, SEND_SMS } from '@/services/mutationGQL'
 import { useMutation } from '@apollo/client'
-import { Button, Form, Input, message } from 'antd'
+import { Button, Form, Input, message, Radio } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './index.scss'
-
+import React, { FC } from 'react';
 const CountDownButton = ({ email }: { email: string }) => {
   const [count, setCount] = useState(60)
   const [isActive, setActive] = useState(false)
@@ -68,19 +68,11 @@ export default function Login() {
               layout='vertical'
               className='login-card-content'
               onFinish={(values) => {
-                const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
-                  values.account,
-                )
                 // loginFunc({
-                //   variables: isEmail
-                //     ? {
-                //         email: values.account,
-                //         password: values.password,
-                //       }
-                //     : {
-                //         phone: values.account,
-                //         password: values.password,
-                //       },
+                //   variables: {
+                //     account: values.account,
+                //     password: values.password,
+                //   },
                 // })
                 //   .then((res) => {
                 //     localStorage.setItem('accessToken', res.data.login.token.accessToken)
@@ -92,8 +84,8 @@ export default function Login() {
                 //     }, 1000)
                 //   })
                 //   .catch((err) => {
-                //     const errText = err.toString().replace('ApolloError: ', '')
-                //     message.error('发生错误:' + errText)
+                //     const errText = err.toString().replace('ApolloError: ', '');
+                //     message.error('发生错误:' + errText);
                 //   })
               }}
               onFinishFailed={(errorInfo) => {
@@ -171,13 +163,8 @@ export default function Login() {
                   values.account,
                 )
                 // loginFunc({
-                //   variables: isEmail
-                //     ? {
-                //         email: values.account,
-                //         password: values.password,
-                //       }
-                //     : {
-                //         phone: values.account,
+                //   variables: {
+                //         account: values.account,
                 //         password: values.password,
                 //       },
                 // })
@@ -205,23 +192,23 @@ export default function Login() {
               }}
             >
               <Form.Item
-                label='用户名'
-                name='nickName'
+                label='学号（工号）'
+                name='account'
                 rules={[
                   {
                     validator(_, value) {
                       if (!value) {
-                        return Promise.reject(new Error('请输入用户名!'))
+                        return Promise.reject(new Error('请输入学号（工号）!'))
                       }
                     },
                   },
                 ]}
               >
-                <Input placeholder='请输入用户名' />
+                <Input placeholder='请输入学号（工号）' />
               </Form.Item>
               <Form.Item
                 label='真实姓名'
-                name='realName'
+                name='name'
                 rules={[
                   {
                     validator(_, value) {
@@ -235,6 +222,16 @@ export default function Login() {
                 <Input placeholder='请输入真实姓名' />
               </Form.Item>
               <Form.Item
+                label='性别'
+                name='sex'
+                rules={[{ required: true, message: '请选择性别!' }]}
+              >
+                <Radio.Group>
+                  <Radio value="Male "> 男 </Radio>
+                  <Radio value="Female"> 女 </Radio>
+                </Radio.Group>
+              </Form.Item>
+              <Form.Item
                 label='邮箱'
                 name='email'
                 rules={[
@@ -245,21 +242,20 @@ export default function Login() {
                 <Input placeholder='请输入邮箱' />
               </Form.Item>
               <Form.Item
+                label='手机号'
+                name='phone'
+                rules={[
+                  { required: true, message: '请输入手机号!' },
+                ]}
+              >
+                <Input placeholder='请输入手机号' />
+              </Form.Item>
+              <Form.Item
                 label='密码'
                 name='password'
                 rules={[{ required: true, message: '请输入密码!' }]}
               >
                 <Input.Password placeholder='请输入密码' />
-              </Form.Item>
-              <Form.Item
-                label='验证码'
-                name='code'
-                rules={[{ required: true, message: '请输入验证码!' }]}
-              >
-                <Input
-                  placeholder='请输入验证码'
-                  addonAfter={<CountDownButton email={newEmail} />}
-                />
               </Form.Item>
               <Form.Item>
                 <Button type='primary' htmlType='submit' block size='large'>
