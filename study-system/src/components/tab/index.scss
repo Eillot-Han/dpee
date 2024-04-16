@@ -1,0 +1,49 @@
+@import "@/styles/common.scss";
+
+.tsc-tabs {
+    min-width: 100%;
+    height: 50px;
+    margin-bottom: 30px;
+    @include flex(row, flex-start, center);
+
+    // 未被选中
+    .tb-wrapper {
+        cursor: pointer;
+        width: 160px;
+        height: 50px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        @include flex(row, flex-start, center);
+        border-radius: 10px;
+        background-color: $main-back;
+        margin-right: 10px;
+
+        &:hover {
+            background-color: $neutral2;
+        }
+
+        .tb-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 100px;
+            background-color: antiquewhite;
+            @include flex(row, center, center);
+            @include PF-12-thin($neutral7);
+            font-weight: 600;
+            margin-right: 6px;
+        }
+
+        .tb-font {
+            @include PF-14-bold($neutral7);
+        }
+    }
+
+    // 选中后
+    .tb-wrapper_choosed {
+        background-color: $neutral7 !important;
+
+        .tb-font {
+            color: $main-back;
+        }
+    }
+}

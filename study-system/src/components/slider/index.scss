@@ -1,0 +1,23 @@
+@import "@/styles/common.scss";
+
+.tsc-slider {
+    width: 100%;
+    overflow: hidden;
+
+    .tsc-slider-wrapper {
+        @include flex(row, flex-start, center);
+        overflow: scroll;
+
+        // 隐藏滚动条
+        &::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            color: transparent;
+        }
+
+        .tsc-slider-card {
+            background-color: $main-back;
+            box-sizing: border-box;
+        }
+    }
+}

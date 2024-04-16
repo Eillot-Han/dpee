@@ -248,7 +248,7 @@ func ShowExamByUserID(c *gin.Context) {
 	response.OkWithData(examResponseList, c)
 }
 
-// 根据学生id显示存在开始时间和结束时间的试卷
+// ShowExamStartTime 根据学生id显示存在开始时间和结束时间的试卷
 func ShowExamStartTime(c *gin.Context) {
 	userID := c.Query("user_id")
 	userIDInt, _ := strconv.Atoi(userID)

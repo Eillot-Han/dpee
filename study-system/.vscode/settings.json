@@ -1,0 +1,13 @@
+{
+  "files.associations": {
+    "typeinfo": "cpp",
+    "*.tsx": "typescriptreact"
+  },
+  "C_Cpp.errorSquiggles": "disabled",
+  "js/ts.implicitProjectConfig.checkJs": true,
+  "cSpell.words": [
+    "ACTIVITYTYPE",
+    "Cascader",
+    "Popconfirm"
+  ]
+}

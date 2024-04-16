@@ -1,0 +1,7 @@
+@import "@/styles/common.scss";
+
+// 外壳，方便内部元素scroll
+.tsc-fullwidth {
+  height: 100vh;
+  width: 100vw;
+}

@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-//Login 账号登录检测
+// Login 账号登录检测
 func Login(c *gin.Context) {
 	account := c.Query("account")
 	password := c.Query("password")
@@ -26,7 +26,7 @@ func Login(c *gin.Context) {
 	}
 }
 
-//Enroll 注册账号
+// Enroll 注册账号
 func Enroll(c *gin.Context) {
 	account := c.PostForm("account")
 	name := c.PostForm("name")
@@ -77,12 +77,12 @@ func Enroll(c *gin.Context) {
 	response.OkWithMessage("账号创建成功", c)
 }
 
-//Logout 登出账号
+// Logout 登出账号
 func Logout(c *gin.Context) {
 	response.Ok(c)
 }
 
-//CancelAccount 注销账号
+// CancelAccount 注销账号
 func CancelAccount(c *gin.Context) {
 	account := c.PostForm("account")
 	accountInt, _ := strconv.Atoi(account)
@@ -104,6 +104,11 @@ func UpdateUserEmail(c *gin.Context) {
 		response.FailWithMessage("账号不存在", c)
 	}
 	user.Email = Email
+	//判断邮箱格式
+	if !CheckEmail(Email) {
+		response.FailWithMessage("邮箱格式错误", c)
+		return
+	}
 	if err := db.Save(&user).Error; err != nil {
 		response.FailWithMessage("修改失败", c)
 	}
@@ -117,6 +122,11 @@ func UpdateUserPhone(c *gin.Context) {
 	Phone := c.PostForm("phone")
 	accountInt, _ := strconv.Atoi(account)
 	db := global.DB
+	//判断手机号格式
+	if !CheckPhone(Phone) {
+		response.FailWithMessage("手机格式错误", c)
+		return
+	}
 	db.Model(&model.User{}).Where("user_id = ?", accountInt).Update("phone", Phone)
 	response.OkWithMessage("修改成功", c)
 }
@@ -156,6 +166,11 @@ func UpdateUserPassword(c *gin.Context) {
 		return
 	}
 	db := global.DB
+	//判断密码格式
+	if !CheckPassword(password) {
+		response.FailWithMessage("密码格式错误", c)
+		return
+	}
 	db.Model(&model.User{}).Where("user_id = ?", accountInt).Update("password", password)
 	response.OkWithMessage("修改成功", c)
 }

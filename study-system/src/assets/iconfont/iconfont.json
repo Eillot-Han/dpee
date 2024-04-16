@@ -1,0 +1,51 @@
+{
+  "id": "3967656",
+  "name": "36c-admin-v2",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "15779817",
+      "name": "word",
+      "font_class": "word",
+      "unicode": "e713",
+      "unicode_decimal": 59155
+    },
+    {
+      "icon_id": "15779827",
+      "name": "png",
+      "font_class": "png",
+      "unicode": "e715",
+      "unicode_decimal": 59157
+    },
+    {
+      "icon_id": "15779745",
+      "name": "画板",
+      "font_class": "huaban",
+      "unicode": "e707",
+      "unicode_decimal": 59143
+    },
+    {
+      "icon_id": "15779746",
+      "name": "图片",
+      "font_class": "tupian",
+      "unicode": "e70a",
+      "unicode_decimal": 59146
+    },
+    {
+      "icon_id": "15779798",
+      "name": "视频",
+      "font_class": "shipin",
+      "unicode": "e710",
+      "unicode_decimal": 59152
+    },
+    {
+      "icon_id": "7831436",
+      "name": "会议活动",
+      "font_class": "huiyihuodong",
+      "unicode": "e626",
+      "unicode_decimal": 58918
+    }
+  ]
+}

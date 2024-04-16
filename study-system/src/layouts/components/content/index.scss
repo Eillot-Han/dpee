@@ -1,0 +1,18 @@
+@import "@/styles/common.scss";
+
+// 外壳，方便内部元素scroll
+.tsc-content {
+  height: 100vh;
+  width: calc(100% - 240px);
+  position: fixed;
+  left: 240px;
+  top: 0;
+  overflow: auto;
+
+  // 隐藏滚动条
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    color: transparent;
+  }
+}

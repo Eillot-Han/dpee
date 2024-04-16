@@ -1,0 +1,62 @@
+@import "@/styles/common.scss";
+
+.form {
+    width: 100%;
+    @include flex(column, flex-start, center, nowrap);
+
+    .form-line {
+        width: 100%;
+        margin-top: 20px;
+        @include flex(row, flex-start, flex-start, wrap);
+
+        .form-line-key {
+            width: 240px;
+            flex-shrink: 0;
+            @include PF-16-bold($neutral6);
+        }
+
+        .form-line-Input {
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .form-line-Select {
+            font-size: 16px;
+            flex: 1;
+        }
+
+        .form-line-imgBox {
+            width: 100px;
+            height: 100px;
+            flex-shrink: 0;
+            @include flex(row, center, center);
+            margin-right: 12px;
+
+            .form-line-img {
+                width: 100%;
+            }
+        }
+
+        .form-line-uploader {
+            flex: 1;
+        }
+
+        .form-line-RangePicker {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .form-line-tip {
+            @include PF-16-thin($neutral5);
+            margin-top: 8px;
+            width: 100%;
+        }
+    }
+
+    .form-submitBtn {
+        font-size: 16px;
+        font-weight: bolder;
+        margin: 40px 0 0 0;
+        width: 200px;
+    }
+}

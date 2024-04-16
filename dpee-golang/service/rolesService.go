@@ -8,6 +8,7 @@ import (
 	"strconv"
 )
 
+// CreateRoles 创建角色
 func CreateRoles() {
 	db := global.DB
 	var roles []model.Roles
@@ -27,6 +28,7 @@ func CreateRoles() {
 	}
 }
 
+// UpdateOneRoles 修改单个角色
 func UpdateOneRoles(c *gin.Context) {
 	account := c.PostForm("account")
 	role := c.PostForm("role")
@@ -37,6 +39,7 @@ func UpdateOneRoles(c *gin.Context) {
 	response.OkWithMessage("修改成功", c)
 }
 
+// UpdateRoles 修改角色
 func UpdateRoles(c *gin.Context) {
 	CreateRoles()
 	db := global.DB
@@ -45,6 +48,16 @@ func UpdateRoles(c *gin.Context) {
 	response.OkWithData(roles, c)
 }
 
+// 修改权限
+func UpdateRoles(c *gin.Context) {
+	role := c.PostForm("role")
+	permission := c.PostForm("permission")
+	db := global.DB
+	db.Model(&model.Roles{}).Where("role_name = ?", role).Update("permission", permission)
+	response.OkWithMessage("修改成功", c)
+}
+
+// UpdateDescription 修改角色描述
 func UpdateDescription(c *gin.Context) {
 	role := c.PostForm("role")
 	description := c.PostForm("description")
@@ -53,6 +66,7 @@ func UpdateDescription(c *gin.Context) {
 	response.OkWithMessage("修改成功", c)
 }
 
+// ShowRoles 查询所有角色
 func ShowRoles(c *gin.Context) {
 	CreateRoles()
 	db := global.DB
@@ -61,6 +75,7 @@ func ShowRoles(c *gin.Context) {
 	response.OkWithData(roles, c)
 }
 
+// ShowRolesByID 根据ID查询角色
 func ShowRolesByID(context *gin.Context) {
 	account := context.Param("account")
 	accountInt, _ := strconv.Atoi(account)
@@ -70,6 +85,7 @@ func ShowRolesByID(context *gin.Context) {
 	response.OkWithData(roles, context)
 }
 
+// ShowRolesByName 根据名称查询角色
 func ShowRolesByName(context *gin.Context) {
 	role := context.Param("role")
 	db := global.DB
@@ -78,6 +94,7 @@ func ShowRolesByName(context *gin.Context) {
 	response.OkWithData(roles, context)
 }
 
+// DeleteRoles 删除角色
 func DeleteRoles(context *gin.Context) {
 	account := context.Param("account")
 	accountInt, _ := strconv.Atoi(account)

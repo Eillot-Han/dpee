@@ -1,0 +1,97 @@
+@import "@/styles/common.scss";
+
+.tsc-ed {
+  width: 600px;
+  margin-top: 20px;
+  margin-left: 20px;
+  background-color: $main-back;
+  box-shadow: 4px 4px 20px rgba($color: #000000, $alpha: .1);
+  
+
+  .tsc-ed-toolbar {
+    background-color: #fafafa;
+    border: 1px solid hsla(210,8%,51%,.13);
+    border-width: 1px 0;
+    position: sticky;
+    top: 44px;
+    z-index: 3;
+    .tet-upside {
+      width: 100%;
+      height: 50px;
+      padding-top: 10px;
+      box-sizing: border-box;
+      cursor: pointer;
+      display: inline-block;
+      @include flex(row, flex-start, center);
+
+      .tet-upside-content {
+        width: 54px;
+        height: 40px;
+        @include flex(column, center, center);
+        border: 0.5px solid $neutral3;
+
+        .iconfont {
+          font-size: 16px;
+          color: $neutral6;
+        }
+        .tet-upside-content-font {
+          @include PF-12-thin($neutral6);
+        }
+      }
+
+      .tet-upside-content:hover {
+        background-color: $neutral2;
+      }
+    }
+  }
+
+
+    .tsc-ed-editor {
+      min-height: 500px;
+      border: none;
+      z-index: 2;
+    }
+
+}
+
+// 覆盖Quill本身样式
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="12"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="12"]::before {
+  content: "12px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="14"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="14"]::before {
+  content: "14px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="16"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="16"]::before {
+  content: "16px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="18"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="18"]::before {
+  content: "18px";
+}
+.ql-snow .ql-picker.ql-size .ql-picker-label[data-value="30"]::before,
+.ql-snow .ql-picker.ql-size .ql-picker-item[data-value="30"]::before {
+  content: "30px";
+}
+
+.ql-size-12 {
+  font-size: 12px;
+}
+
+.ql-size-14 {
+  font-size: 14px;
+}
+
+.ql-size-16 {
+  font-size: 16px;
+}
+
+.ql-size-18 {
+  font-size: 18px;
+}
+
+.ql-size-30 {
+  font-size: 30px;
+}

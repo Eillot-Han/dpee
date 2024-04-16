@@ -1,0 +1,31 @@
+@import "@/styles/common.scss";
+
+.emailEditor {
+    width: 100%;
+    @include flex(column, flex-start, flex-start);
+    border-radius: 8px;
+    background-color: $main-back;
+    padding: 24px;
+    box-sizing: border-box;
+
+    .emailEditor-title {
+        @include PF-22-bold($neutral6);
+        margin-bottom: 20px;
+    }
+
+    .emailEditor-font {
+        @include PF-18-thin($neutral6);
+        flex-shrink: 0;
+    }
+    .emailEditor-do {
+        width: 100%;
+        @include flex(row, flex-start, center);
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .emailEditor-editor {
+        width: 100%;
+        height: 500px;
+    }
+}

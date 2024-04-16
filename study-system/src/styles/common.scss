@@ -1,0 +1,156 @@
+/* 引入iconfont */
+@import "@/assets/iconfont/iconfont.css";
+
+/* 主题颜色 */
+$main-back: #fff;
+$brand1: #e6f4ff;
+$brand2: #ffe1cc;
+$brand3: #ff791a;
+$brand4: #1677ff;
+$brand5: #e65f00;
+$neutral1: #F4F6F8;
+$neutral2: #ededed;
+$neutral3: #d8d8d8;
+$neutral4: #b3b3b3;
+$neutral5: #999999;
+$neutral6: #3d3d3d;
+$neutral7: #313131;
+$link1: #339dff;
+$link2: #0084ff;
+$error-back: #fcdfd9;
+$error-font: #f15533;
+$success-back: #dff1da;
+$success-font: #63ba4d;
+$notice-back: #ffedcc;
+$notice-font: #ffa400;
+
+/* flex布局 */
+@mixin flex(
+  $direction: column,
+  $justify: space-between,
+  $align: flex-start,
+  $wrap: nowrap
+) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+  flex-wrap: $wrap;
+}
+
+/* 字体通用 */
+@mixin fonts(
+  $font-family: "PingFang SC",
+  $font-size: 12px,
+  $color: $neutral6,
+  $font-weight: 400
+) {
+  font-family: $font-family;
+  font-size: $font-size;
+  color: $color;
+  font-weight: $font-weight;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 所有苹方字体 */
+@mixin PF-30-bold($color: $neutral7) {
+  @include fonts("PingFang SC", 30px, $color, 600);
+}
+
+@mixin PF-22-bold($color: $neutral6) {
+  @include fonts("PingFang SC", 22px, $color, 600);
+}
+
+@mixin PF-22-thin($color: $neutral6) {
+  @include fonts("PingFang SC", 22px, $color, 400);
+}
+
+@mixin PF-18-bold($color: $neutral6) {
+  @include fonts("PingFang SC", 18px, $color, 600);
+}
+
+@mixin PF-18-thin($color: $neutral6) {
+  @include fonts("PingFang SC", 18px, $color, 400);
+}
+
+@mixin PF-16-bold($color: $neutral6) {
+  @include fonts("PingFang SC", 16px, $color, 600);
+}
+
+@mixin PF-16-thin($color: $neutral6) {
+  @include fonts("PingFang SC", 16px, $color, 400);
+}
+
+@mixin PF-14-bold($color: $neutral6) {
+  @include fonts("PingFang SC", 14px, $color, 600);
+}
+
+@mixin PF-14-thin($color: $neutral6) {
+  @include fonts("PingFang SC", 14px, $color, 400);
+}
+
+@mixin PF-12-thin($color: $neutral6) {
+  @include fonts("PingFang SC", 12px, $color, 400);
+}
+
+/* 字体控制行数 */
+@mixin length-font($clamp: 1) {
+  /* 在恰当的断字点进行换行 */
+  word-break: break-all;
+  /* 超出范围隐藏 */
+  overflow: hidden;
+  /* 文字超出用省略号 */
+  text-overflow: ellipsis;
+  /* 盒子模型 */
+  display: -webkit-box;
+  /* 显示的文本行数 */
+  -webkit-line-clamp: $clamp;
+  /* 子元素的垂直排列方式 */
+  -webkit-box-orient: vertical;
+}
+
+/* 左右padding */
+@mixin padding-pages() {
+  padding: 0 30px;
+  box-sizing: border-box;
+}
+
+/* 按钮 */
+@mixin btn(
+  $width: 200px,
+  $height: 100px,
+  $color: $main-back,
+  $back: $brand4,
+  $border: 6px
+) {
+  width: $width;
+  height: $height;
+  background-color: $back;
+  @include PF-22-thin($color);
+  @include flex(row, center, center);
+  border-radius: $border;
+}
+
+/* 按钮悬浮样式 */
+@mixin form-btn-hover {
+  box-shadow: 4px 4px 20px 0px rgba(0, 0, 0, 0.1);
+}
+
+/* 内容背景 */
+@mixin content-back {
+  width: 100%;
+  min-height: 100%;
+  height: auto;
+  overflow: hidden;
+  background-color: $neutral1;
+  padding: 20px 0 50px 20px;
+  box-sizing: border-box;
+  @include flex(column, flex-start, center);
+}
+
+/* 内容标题 */
+@mixin content-title {
+  @include PF-16-bold($neutral6);
+  margin-bottom: 30px;
+}

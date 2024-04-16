@@ -1,0 +1,108 @@
+@import "@/styles/common.scss";
+
+.tsc-phone {
+  @include flex(column, flex-start);
+  height: 860px;
+
+  .tsc-phone-hint {
+    height: 30px;
+    width: 100%;
+    @include flex(row, flex-start, center);
+    @include PF-16-bold($neutral7);
+    font-weight: 900;
+  }
+
+  .tsc-phone-wrapper {
+    width: 375px;
+    height: 800px;
+    margin-top: 30px;
+    overflow: auto;
+    border-radius: 60px;
+    border: 12px solid #000;
+    background-color: $main-back;
+    box-shadow: 10px 10px 10px rgba($color: #000000, $alpha: 0.1);
+    
+    // 隐藏滚动条
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      color: transparent;
+    }
+
+    .tsc-phone-header {
+      width: 100%;
+      height: 42px;
+      background-color: $main-back;
+      position: sticky;
+      z-index: 4;
+      top: 0;
+      left: 0;
+    }
+
+    .tsc-phone-navbar {
+      width: 100%;
+      height: 44px;
+      background-color: $main-back;
+      position: sticky;
+      z-index: 4;
+      left: 0;
+      top: 42px;
+      @include flex(row, space-between, center);
+      padding: 0 20px;
+      box-sizing: border-box;
+
+      .tsc-phone-navbar-title {
+        @include PF-16-bold($neutral7);
+        font-weight: 800;
+        max-width: 70%;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+    }
+
+    .tsc-phone-img {
+      width: 100%;
+      min-height: 200px;
+      @include flex(row);
+      background-color: $neutral2;
+
+      img {
+        width: 100%;
+        flex: 1;
+      }
+    }
+
+    .tsc-phone-info {
+      width: 90%;
+      border-radius: 10px;
+      height: 140px;
+      border: 1px solid $neutral2;
+      background-color: $main-back;
+      position: relative;
+      top: -30px;
+      left: 5%;
+      padding: 14px 10px;
+      box-sizing: border-box;
+      @include flex(column, space-between);
+
+      .tsc-phone-info-title {
+        @include PF-14-bold($neutral7);
+        @include length-font(2);
+      }
+
+      .tsc-phone-info-p {
+        @include PF-12-thin($neutral5);
+        @include length-font();
+      }
+    }
+
+    .tsc-phone-content {
+      width: 100%;
+      height: auto;
+      margin-top: 0px;
+      word-break: break-all;
+      padding: 0 20px 40px 20px;
+      box-sizing: border-box;
+    }
+  }
+}
