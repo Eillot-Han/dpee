@@ -49,7 +49,7 @@ export default function Sidebar() {
       )}
       <div className='tsc-sidebar-menu'>
         {menu
-          .find((val) => val.type === (userInfo ? userInfo.type : 'STUDENT'))
+          .find((val) => val.type === (userInfo ? userInfo.type : 'TEACHER'))
           ?.contents.map((menuItem) => (
             <div
               key={'sidebar-' + menuItem.default}

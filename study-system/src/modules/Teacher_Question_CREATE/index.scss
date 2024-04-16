@@ -1,0 +1,55 @@
+@import "@/styles/common.scss";
+
+// index.scss
+
+.teacher-question-create {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 24px;
+
+  h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 32px;
+  }
+
+  .ant-form {
+    display: flex;
+    flex-direction: column;
+
+    & > .ant-form-item {
+      margin-bottom: 24px;
+    }
+
+    .ant-form-item-label {
+      font-weight: bold;
+      color: #6c6c6c;
+    }
+
+    .ant-input,
+    .ant-input-number,
+    .ant-select {
+      width: 100%;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    .ant-textarea.ant-input {
+      min-height: 120px;
+    }
+
+    .ant-btn-primary {
+      width: 100%;
+      height: 48px;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+}

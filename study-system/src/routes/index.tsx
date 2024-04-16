@@ -2,12 +2,14 @@ import Admin_Class from '@/modules/Admin_Class'
 import Admin_Questions from '@/modules/Admin_Questions'
 import Admin_User from '@/modules/Admin_User'
 import Admin_Users from '@/modules/Admin_Users'
+import Exam from '@/modules/Exam'
 import Student from '@/modules/Student'
 import Student_Exam from '@/modules/Student_Exam'
 import Student_Score from '@/modules/Student_Score'
 import Student_User from '@/modules/Student_User'
 import Teacher from '@/modules/Teacher'
 import Teacher_Class from '@/modules/Teacher_Class'
+import Teacher_Class_Room from '@/modules/Teacher_Class_Room'
 import Teacher_Exams from '@/modules/Teacher_Exams'
 import Teacher_Questions from '@/modules/Teacher_Questions'
 import Teacher_User from '@/modules/Teacher_User'
@@ -97,8 +99,13 @@ const routes = [
   },
   {
     path: '/exam',
-    element: <Welcome />,
+    element: <Exam />,
     title: '考试界面',
+  },
+  {
+    path: '/teacher/classroom',
+    element: <Teacher_Class_Room />,
+    title: '班级界面',
   },
 ]
 

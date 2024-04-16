@@ -46,7 +46,7 @@ const menu = [
         default: '个人中心',
         default_icon: require('../../../assets/icon/permission.png'),
         choosed_icon: require('../../../assets/icon/permission-choosed.png'),
-        path: '/student/user',
+        path: '/teacher/user',
       },
       {
         default: '试题管理',
