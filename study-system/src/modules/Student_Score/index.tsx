@@ -5,11 +5,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './index.scss'
 
-export default function teacher() {
+export default function Student_Score() {
   return (
     <div className='login'>
       <div className='login-leftside'>
-        <h1>教师端</h1>
+        <h1>学生端</h1>
       </div>
     </div>
   )
