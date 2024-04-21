@@ -49,10 +49,8 @@ const Exam = () => {
     // 假设 exam_id 和 student_id 是从某个地方获取的
     const examID = localStorage.getItem('exams_id');
     const studentID = localStorage.getItem('userId');
-    axios.post(`/exams/submitExam`, {
-      exam_id: examID,
-      student_id: studentID,
-      answers,
+    axios.get(`/exams/submitExam`, {
+      params: { exam_id: examID, student_id: studentID},
     })
       .then(response => {
         console.log(2);
@@ -254,7 +252,7 @@ const Exam = () => {
         <Button type="primary"
           onClick={() => {
             submitExamAnswers();
-            navigate(`/exam`);
+            navigate(`/student/exam`);
           }}
         >
           提交试卷

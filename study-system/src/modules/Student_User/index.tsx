@@ -3,13 +3,13 @@ import { useMutation } from '@apollo/client'
 import { Breadcrumb, Button, DatePicker, Empty, Form, Input, Layout, Menu, MenuProps, Select, Space, Tabs, TabsProps, message } from 'antd'
 import { useEffect, useState, version } from 'react'
 import { useNavigate } from 'react-router-dom'
-import './index.scss'
 import { Header, Content, Footer } from 'antd/es/layout/layout'
 import React from 'react';
 import "@/styles/common.scss";
 import { MailOutlined, PhoneOutlined } from '@ant-design/icons'
 import axios from 'axios'
 import { LoginResponse } from '@/model/userAPI'
+import './index.scss'
 
 
 
