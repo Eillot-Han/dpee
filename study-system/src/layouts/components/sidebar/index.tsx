@@ -40,8 +40,8 @@ export default function Sidebar() {
             退出登录
           </Button>
           <div className='tsc-sidebar-log'>
-            <img alt='avatar' src={userInfo.avatar} className='tsl-avatar' />
-            <p className='tsl-name'>{userInfo.nickName}</p>
+            {/* <img alt='avatar' src={userInfo.avatar} className='tsl-avatar' /> */}
+            <p className='tsl-name'>{userInfo.username}</p>
           </div>
         </>
       ) : (
@@ -49,7 +49,7 @@ export default function Sidebar() {
       )}
       <div className='tsc-sidebar-menu'>
         {menu
-          .find((val) => val.type === (userInfo ? userInfo.type : 'TEACHER'))
+          .find((val) => val.type === (userInfo ? userInfo.user_role : 'NOLOGIN'))
           ?.contents.map((menuItem) => (
             <div
               key={'sidebar-' + menuItem.default}

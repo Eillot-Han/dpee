@@ -559,6 +559,11 @@ func CreateStudentExam(c *gin.Context) {
 	studentExam.ExamID = uint(examIDInt)
 	studentExam.StartTime = time.Now()
 	studentExam.Status = "InProgress"
+	//判断是否已经存在
+	if err := db.Where("student_id = ? and exam_id = ?", studentExam.StudentID, studentExam.ExamID).First(&studentExam).Error; err == nil {
+		response.FailWithMessage("已经存在", c)
+		return
+	}
 	if err := db.Create(&studentExam).Error; err != nil {
 		response.FailWithMessage("创建学生考试失败", c)
 		return
@@ -795,7 +800,7 @@ func ShowQuestionByPage(c *gin.Context) {
 	}, c)
 }
 
-// UpdateStatus UpdateStatus更改所有该examID下考试的状态
+// UpdateStatus 更改所有该examID下考试的状态
 func UpdateStatus(examID int) {
 	db := global.DB
 	var studentExams []model.StudentExams

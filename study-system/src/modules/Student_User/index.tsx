@@ -8,53 +8,106 @@ import { Header, Content, Footer } from 'antd/es/layout/layout'
 import React from 'react';
 import "@/styles/common.scss";
 import { MailOutlined, PhoneOutlined } from '@ant-design/icons'
+import axios from 'axios'
+import { LoginResponse } from '@/model/userAPI'
 
+
+
+const storedUserInfo = localStorage.getItem('userInfo');
+let userInfoObject;
+if (storedUserInfo) {
+  userInfoObject = JSON.parse(storedUserInfo);
+}
 const userInfo = {
-  username: '王昱烨',
-  email: 'user@example.com',
-  phone: '12345678900',
+  userId: localStorage.getItem('userId') || undefined,
+  username: userInfoObject?.username || undefined,
+  email: userInfoObject?.email || undefined,
+  phone: userInfoObject?.phone || undefined,
+  firstName: userInfoObject?.firstName || undefined,
+  lastName: userInfoObject?.lastName || undefined,
 };
-
+// console.log('Selected gender:', localStorage);
 
 const BasicInfo = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   useEffect(() => {
     // 设置表单的默认值
     form.setFieldsValue(userInfo);
   }, [form]);
 
-  const onFinish = (values: any) => {
-    // 这里处理提交表单的逻辑，比如保存到数据库
-    console.log('Received values of form:', values);
-    // 可以在此处模拟保存操作，例如使用API请求
-    // message.success('信息已保存');
-  };
-
   return (
-    <Form layout="vertical" form={form} onFinish={onFinish}>
+    <Form
+      layout="vertical"
+      form={form}
+      className='user-card-content'
+      onFinish={(values) => {
+        const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
+          values.account,
+        )
+        const formData = new FormData();
+        formData.append('account', values.userId);
+        formData.append('username', values.username);
+        formData.append('firstName', values.firstName);
+        formData.append('lastName', values.lastName);
+        formData.append('email', values.email);
+        formData.append('phone', values.phone);
+        axios.post('/user/updateEmail', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+          .then((response) => {
+            const apiResponse: LoginResponse = response.data
+            // if (apiResponse.code === 200 && apiResponse.msg === '修改成功') {
+              const userData = apiResponse.data;
+              localStorage.setItem('userInfo', JSON.stringify(userData));
+
+              console.log('Selected gender:', localStorage);
+              // localStorage.setItem('accessToken', response.data.login.token.accessToken)
+              // localStorage.setItem('refreshToken', response.data.login.token.refreshToken)
+              message.success('修改成功');
+              // setTimeout(() => {
+              //   navigate('/')
+              // }, 1000)
+            // }
+          })
+          .catch((err) => {
+            message.error('修改失败');
+          })
+      }}
+    >
       <Form.Item
         label="账号"
-        name="username"
+        name="userId"
         rules={[{ required: true, message: '请输入账号!' }]}
       >
-        <Input disabled={true} />
+        <Input placeholder='请输入账号' />
       </Form.Item>
 
       <Form.Item
         label="姓名"
-        name={['name', 'firstName']}
+        name="username"
         rules={[{ required: true, message: '请输入姓名!' }]}
       >
-        <Input />
+        <Input placeholder='请输入姓名' />
       </Form.Item>
 
       <Form.Item
-        label="姓氏"
-        name={['name', 'lastName']}
-        rules={[{ required: true, message: '请输入姓氏!' }]}
+        label="姓"
+        name="firstName"
+        rules={[{ required: true, message: '请输入姓!' }]}
       >
-        <Input />
+        <Input placeholder='请输入姓' />
+      </Form.Item>
+
+      <Form.Item
+        label="名"
+        name="lastName"
+        rules={[{ required: true, message: '请输入名!' }]}
+      >
+        <Input placeholder='请输入名' />
       </Form.Item>
 
       <Form.Item
@@ -71,16 +124,6 @@ const BasicInfo = () => {
         rules={[{ required: true, pattern: /^1[3-9]\d{9}$/, message: '请输入有效的手机号!' }]}
       >
         <Input prefix={<PhoneOutlined />} />
-      </Form.Item>
-
-      <Form.Item
-        label="性别"
-        name="gender"
-      >
-        <Select>
-          <Select.Option value="male">男</Select.Option>
-          <Select.Option value="female">女</Select.Option>
-        </Select>
       </Form.Item>
 
       <Form.Item>
@@ -104,7 +147,40 @@ const SecuritySettings = () => {
   };
 
   return (
-    <Form layout="vertical" form={form} onFinish={onFinish}>
+    <Form 
+    layout="vertical" 
+    form={form} 
+    onFinish={(values) => {
+      const formData = new FormData();
+      formData.append('account', values.userId);
+      formData.append('password', values.password);
+      axios.post('/user/updatePassword', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+        .then((response) => {
+          const apiResponse: LoginResponse = response.data
+          if (apiResponse.code === 200 && apiResponse.msg === '修改成功') {
+            const userData = apiResponse.data;
+            localStorage.setItem('userInfo', JSON.stringify(userData));
+
+            console.log('Selected gender:', localStorage);
+            // localStorage.setItem('accessToken', response.data.login.token.accessToken)
+            // localStorage.setItem('refreshToken', response.data.login.token.refreshToken)
+            message.success('修改成功');
+            // setTimeout(() => {
+            //   navigate('/')
+            // }, 1000)
+          }else if(apiResponse.code === 500 && apiResponse.msg === '密码不正确') {
+            message.success('密码不正确');
+          }
+        })
+        .catch((err) => {
+          message.error('修改失败');
+        })
+    }}
+    >
       <Form.Item
         label="当前密码"
         name="currentPassword"

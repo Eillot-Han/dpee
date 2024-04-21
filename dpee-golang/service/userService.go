@@ -181,7 +181,6 @@ func UpdateUser(c *gin.Context) {
 	name := c.PostForm("name")
 	email := c.PostForm("email")
 	phone := c.PostForm("phone")
-	sex := c.PostForm("sex")
 	firstName := c.PostForm("first_name")
 	lastName := c.PostForm("last_name")
 	accountInt, _ := strconv.Atoi(account)
@@ -194,7 +193,6 @@ func UpdateUser(c *gin.Context) {
 
 	user.Email = email
 	user.Phone = phone
-	user.Sex = sex
 	user.Username = name
 	user.FirstName = firstName
 	user.LastName = lastName

@@ -3,6 +3,9 @@ import { useMutation } from '@apollo/client'
 import { Button, Form, Input, message, Radio } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { LoginResponse } from '../../model/userAPI'
+import FormData from 'form-data';
+import axios from 'axios'
 import './index.scss'
 import React, { FC } from 'react';
 const CountDownButton = ({ email }: { email: string }) => {
@@ -67,26 +70,34 @@ export default function Login() {
               form={form}
               layout='vertical'
               className='login-card-content'
+              initialValues={{ 
+                account: localStorage.getItem('username') || undefined, 
+                password: localStorage.getItem('password') || undefined 
+              }}
               onFinish={(values) => {
-                // loginFunc({
-                //   variables: {
-                //     account: values.account,
-                //     password: values.password,
-                //   },
-                // })
-                //   .then((res) => {
-                //     localStorage.setItem('accessToken', res.data.login.token.accessToken)
-                //     localStorage.setItem('refreshToken', res.data.login.token.refreshToken)
-                //     localStorage.setItem('userInfo', JSON.stringify(res.data.login.user))
-                //     message.success('登录成功')
-                //     setTimeout(() => {
-                //       navigate('/')
-                //     }, 1000)
-                //   })
-                //   .catch((err) => {
-                //     const errText = err.toString().replace('ApolloError: ', '');
-                //     message.error('发生错误:' + errText);
-                //   })
+                axios.get('/user/login', {
+                  params: {
+                    account: values.account,
+                    password: values.password,
+                  }
+                })
+                  .then((response) => {
+                    const apiResponse: LoginResponse = response.data
+                    if (apiResponse.code === 200 && apiResponse.msg === 'success') {
+                      const userData = apiResponse.data;
+                      localStorage.setItem('userId', `${userData.user_id}`);
+                      localStorage.setItem('userInfo', JSON.stringify(userData));
+                      // localStorage.setItem('accessToken', response.data.login.token.accessToken)
+                      // localStorage.setItem('refreshToken', response.data.login.token.refreshToken)
+                      message.success('登录成功');
+                      setTimeout(() => {
+                        navigate('/')
+                      }, 1000)
+                    }
+                  })
+                  .catch((err) => {
+                    message.error('登录失败');
+                  })
               }}
               onFinishFailed={(errorInfo) => {
                 console.log('Failed:', errorInfo)
@@ -101,15 +112,7 @@ export default function Login() {
                       if (!value) {
                         return Promise.reject(new Error('请输入账号!'))
                       }
-                      const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(value)
-                      if (
-                        isEmail ||
-                        (/^(\+\d{1,3}[- ]?)?(\(?\d{3,4}\)?[- ]?)?[\d\-]{5,16}$/.test(value) &&
-                          value.length < 17)
-                      ) {
-                        return Promise.resolve()
-                      }
-                      return Promise.reject(new Error('账号必须为手机或邮箱格式!'))
+                      return Promise.resolve()
                     },
                   },
                 ]}
@@ -158,66 +161,79 @@ export default function Login() {
               form={form}
               layout='vertical'
               className='login-card-content'
+              initialValues={{ sex: 'Male' }}
               onFinish={(values) => {
                 const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(
                   values.account,
                 )
-                // loginFunc({
-                //   variables: {
-                //         account: values.account,
-                //         password: values.password,
-                //       },
-                // })
-                //   .then((res) => {
-                //     localStorage.setItem('accessToken', res.data.login.token.accessToken)
-                //     localStorage.setItem('refreshToken', res.data.login.token.refreshToken)
-                //     localStorage.setItem('userInfo', JSON.stringify(res.data.login.user))
-                //     message.success('登录成功')
-                //     setTimeout(() => {
-                //       navigate('/')
-                //     }, 1000)
-                //   })
-                //   .catch((err) => {
-                //     const errText = err.toString().replace('ApolloError: ', '')
-                //     message.error('发生错误:' + errText)
-                //   })
+                const formData = new FormData();
+                formData.append('account', values.account);
+                formData.append('password', values.password);
+                formData.append('sex', values.sex);
+                formData.append('name', values.username);
+                formData.append('email', values.email);
+                formData.append('phone', values.phone);
+
+                console.log('Selected gender:', values);
+
+                axios.post('/user/enroll', formData, {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                })
+                  .then((response) => {
+                    if (response.data.code === 200) {
+                      localStorage.setItem('userId', `${values.username}`);
+                      localStorage.setItem('password', `${values.password}`);
+                      // localStorage.setItem('userInfo', JSON.stringify(formData));
+                      message.success('注册成功');
+                      setTimeout(() => {
+                        setType('signIn')
+                      }, 1000)
+                    } else if(response.data.code === 500 && response.data.code === '账号已存在 (500)'){
+                      message.error('账号已存在');
+                    }
+                  })
+                  .catch((err) => {
+                    message.error('注册失败');
+                  })
               }}
               onFinishFailed={(errorInfo) => {
                 console.log('Failed:', errorInfo)
               }}
-              onFieldsChange={(changedFields: any) => {
-                if (changedFields[0] && changedFields[0].name[0] === 'email') {
-                  setEmail(changedFields[0].value)
-                }
-              }}
+            // onFieldsChange={(changedFields: any) => {
+            //   if (changedFields[0] && changedFields[0].name[0] === 'email') {
+            //     setEmail(changedFields[0].value)
+            //   }
+            // }}
             >
               <Form.Item
                 label='学号（工号）'
                 name='account'
-                rules={[
-                  {
-                    validator(_, value) {
-                      if (!value) {
-                        return Promise.reject(new Error('请输入学号（工号）!'))
-                      }
-                    },
-                  },
-                ]}
+                // rules={[
+                //   {
+                //     validator(_, value) {
+                //       if (!value) {
+                //         return Promise.reject(new Error('请输入学号（工号）!'))
+                //       }
+                //     },
+                //   },
+                // ]}
               >
                 <Input placeholder='请输入学号（工号）' />
               </Form.Item>
               <Form.Item
                 label='真实姓名'
-                name='name'
-                rules={[
-                  {
-                    validator(_, value) {
-                      if (!value) {
-                        return Promise.reject(new Error('请输入真实姓名!'))
-                      }
-                    },
-                  },
-                ]}
+                name='username'
+                // rules={[
+                //   {
+                //     validator(_, value) {
+                //       if (!value) {
+                //         return Promise.reject(new Error('请输入真实姓名!'))
+                //       }
+                //     },
+                //   },
+                // ]}
               >
                 <Input placeholder='请输入真实姓名' />
               </Form.Item>
@@ -227,7 +243,7 @@ export default function Login() {
                 rules={[{ required: true, message: '请选择性别!' }]}
               >
                 <Radio.Group>
-                  <Radio value="Male "> 男 </Radio>
+                  <Radio value="Male"> 男 </Radio>
                   <Radio value="Female"> 女 </Radio>
                 </Radio.Group>
               </Form.Item>

@@ -7,9 +7,14 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import "./App.scss";
+import axios from "axios";
 import LayoutItem from "./layouts";
 
 const graphQLServerUrl = "https://36c-devapi.ambitions.pro/graphql";
+
+axios.defaults.baseURL = 'http://127.0.0.1:8888';
+axios.defaults.timeout = 5000;
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const httpLink = createHttpLink({
   uri: graphQLServerUrl,

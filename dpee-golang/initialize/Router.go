@@ -8,6 +8,7 @@ import (
 func Routers() *gin.Engine {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+	r.Use(Cors())
 
 	user := r.Group("/user")
 	{

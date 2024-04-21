@@ -36,16 +36,16 @@ CREATE TABLE classes
 
 CREATE TABLE exams
 (
-    Exam_ID          SERIAL PRIMARY KEY,
-    Title            VARCHAR(100),
+    Exams_ID          SERIAL PRIMARY KEY,
+    Exams_name       VARCHAR(100),
     Description      TEXT,
-    Subject          VARCHAR(100),
+    Subject_ID       VARCHAR(100),
     Location         VARCHAR(200),
     Class_ID         INT,
     Start_Time       TIMESTAMP,
     End_Time         TIMESTAMP,
     Duration_Minutes INT,
-    Total_Questions  INT NOT NULL,
+    Total_Question  INT NOT NULL,
     Create_By        INT,
     Create_At        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_exams_user FOREIGN KEY (Create_By) REFERENCES Users (User_ID)
@@ -122,7 +122,7 @@ CREATE TABLE student_exams
     Status          VARCHAR(50) NOT NULL CHECK (Status IN ('InProgress', 'Submitted', 'Evaluated')),
     Create_At       TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_student_exams_student FOREIGN KEY (Student_ID) REFERENCES Users (User_ID),
-    CONSTRAINT fk_student_exams_exam FOREIGN KEY (Exam_ID) REFERENCES Exams (Exam_ID)
+    CONSTRAINT fk_student_exams_exam FOREIGN KEY (Exam_ID) REFERENCES Exams (Exams_ID)
 );
 
 CREATE TABLE user_classes
@@ -142,6 +142,7 @@ CREATE TABLE exam_question_list
     Question_ID     INT NOT NULL,
     Exam_ID         INT NOT NULL,
 
-    FOREIGN KEY (Exam_ID) REFERENCES Exams (Exam_ID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (Exam_ID) REFERENCES Exams (Exams_ID) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY (Question_ID) REFERENCES Questions (Question_ID) ON DELETE CASCADE ON UPDATE CASCADE
 );
+

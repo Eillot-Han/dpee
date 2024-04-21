@@ -17,7 +17,7 @@ const menu = [
     ],
   },
   {
-    type: 'STUDENT',
+    type: 'Student',
     contents: [
       {
         default: '个人中心',
@@ -40,7 +40,7 @@ const menu = [
     ],
   },
   {
-    type: 'TEACHER',
+    type: 'Teacher',
     contents: [
       {
         default: '个人中心',
@@ -69,7 +69,7 @@ const menu = [
     ],
   },
   {
-    type: 'ADMIN',
+    type: 'Admin',
     contents: [
       {
         default: '个人中心',

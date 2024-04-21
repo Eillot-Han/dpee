@@ -40,7 +40,7 @@ func UpdateOneRoles(c *gin.Context) {
 }
 
 // UpdateRoles 修改角色
-func UpdateRoles(c *gin.Context) {
+func UpdateRole(c *gin.Context) {
 	CreateRoles()
 	db := global.DB
 	var roles []model.Roles
@@ -51,9 +51,9 @@ func UpdateRoles(c *gin.Context) {
 // 修改权限
 func UpdateRoles(c *gin.Context) {
 	role := c.PostForm("role")
-	permission := c.PostForm("permission")
+	description := c.PostForm("description")
 	db := global.DB
-	db.Model(&model.Roles{}).Where("role_name = ?", role).Update("permission", permission)
+	db.Model(&model.Roles{}).Where("role_name = ?", role).Update("description", description)
 	response.OkWithMessage("修改成功", c)
 }
 
