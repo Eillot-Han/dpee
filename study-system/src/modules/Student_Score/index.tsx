@@ -42,7 +42,8 @@ async function exam_score(exam_id: number): Promise<number> {
       }),
     ]);
 
-    const score = response.data.data.score;
+    const score = response.data.data;
+    console.log(score);
     return score;
   } catch (error) {
     console.error('Error in exam_stats:', error);
@@ -72,6 +73,7 @@ export default function Student_Score() {
         const scores: ExamScore = {};
         for (const exam of examsData) {
           scores[exam.exams_id] = await exam_score(exam.exams_id);
+          // console.log(exam.exams_id)
         }
         setExamsScore(scores);
         // 构建考试状态对象，并更新状态

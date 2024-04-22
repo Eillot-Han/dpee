@@ -39,7 +39,7 @@ const Teacher_Exams = () => {
   useEffect(() => {
     if (teacherId) {
       axios.get(`/exams/showExamByTeacherID?teacher_id=${teacherId}`).then((response) => {
-        setExams(response.data.data.data);
+        setExams(response.data.data);
       }).catch((error) => {
         console.error('Error fetching exams:', error);
         message.error('获取试卷列表失败');
@@ -71,7 +71,7 @@ const Teacher_Exams = () => {
 
   // 生成试卷
   const handlePaperGeneration = () => {
-    axios.get(`/exams/extractQuestionsByType?type=${type}&num=${num}`).then((response) => {
+    axios.get(`/exams/extractQuestionsByType?user_id=${localStorage.getItem('userId')}&type=${type}&num=${num}`).then((response) => {
       // 处理返回结果
       message.success('试卷生成成功');
       // navigate('/generate-papers'); // 根据实际路由调整

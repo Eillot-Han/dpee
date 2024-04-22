@@ -7,10 +7,12 @@ import { useNavigate } from 'react-router-dom';
 type Classes = {
   class_id: number;
   class_name: string;
+  teacher_id: number;
+  course_id: number;
   student_count: number;
   description?: string;
+  create_at: string;
 };
-
 const Teacher_Classm = () => {
   const navigate = useNavigate();
   const [classes, setClasses] = useState<Classes[]>([]);
@@ -21,6 +23,7 @@ const Teacher_Classm = () => {
       try {
         const response = await axios.get<{ data: Classes[] }>('/class/showClasses');
         setClasses(response.data.data);
+        console.log(response.data.data);
       } catch (error) {
         console.error('Error fetching classes:', error);
       }
@@ -51,17 +54,16 @@ const Teacher_Classm = () => {
       dataIndex: 'student_count',
       key: 'student_count',
     },
-    {
-      title: 'Description',
-      key: 'description',
-      render: (description: string | undefined) => (
-        <Tooltip title={description || 'No description'}>
-          <Typography.Text ellipsis>
-            {description || 'No description'}
-          </Typography.Text>
-        </Tooltip>
-      ),
-    },
+    // {
+    //   title: 'Description',
+    //   key: 'description',
+    //   render: (description: string | undefined) => (
+    //     <Tooltip title={description || 'No description'}>
+    //       {/* 直接显示 description，如果为 undefined，则显示 'No description' */}
+    //       <span>{description || 'No description'}</span>
+    //     </Tooltip>
+    //   ),
+    // },
     {
       title: 'Action',
       key: 'action',

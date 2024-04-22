@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import { Table, Button, Space, Popconfirm, Input, Modal, Typography, message } from 'antd';
-import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import { PlusOutlined } from '@ant-design/icons';
+import React, { useState } from 'react';
+import { Table, Button, Space, Popconfirm, Input, Modal, Typography } from 'antd';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 
 // 学生数据结构
 type User = {
@@ -16,53 +14,45 @@ type User = {
   user_role: string;
   user_class: string;
   create_at: string;
+  score?: string;
 };
 
-// 班级数据结构
-type Classroom = {
-  id: string;
-  name: string;
-  students: User[];
-};
+// 初始模拟数据
+const initialUsers: User[] = [
+  {
+    user_id: 1,
+    username: '3211',
+    sex: 'Male',
+    email: '4324@example.com',
+    phone: '446456422',
+    first_name: '321',
+    last_name: '32',
+    user_role: 'Student',
+    user_class: 'Class 1',
+    create_at: '2021-05-01',
+    score: '80',
+  },
+  {
+    user_id: 2,
+    username: '432',
+    sex: 'Male',
+    email: '321321@example.com',
+    phone: '4362784',
+    first_name: '32',
+    last_name: '123',
+    user_role: 'Student',
+    user_class: 'Class 1',
+    create_at: '2021-05-01',
+    score: '60',
+  },
+  // 可以添加更多用户...
+];
 
 const Teacher_Class_Room = () => {
-  const navigate = useNavigate();
-  const params = useParams<{ classId: string }>();
-  const classId = params.classId!;
-  const [classroom, setClassroom] = useState<Classroom | null>(null);
-  const [students, setStudents] = useState<User[]>([]);
-  const [formVisible, setFormVisible] = useState(false);
+  const [users, setUsers] = useState<User[]>(initialUsers);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [addingStudentId, setAddingStudentId] = useState('');
-
-  // 获取特定班级的学生列表
-  useEffect(() => {
-    const fetchStudents = async () => {
-      try {
-        const response = await axios.get<User[]>(`/class/showStudentsByClassID?class_id=${params.classId}`);
-        setStudents(response.data);
-      } catch (error) {
-        console.error('Error fetching students:', error);
-      }
-    };
-
-    fetchStudents();
-  }, [params.classId]);
-
-  // 获取特定学生的分数
-  useEffect(() => {
-    students.forEach(async (student) => {
-      try {
-        const scoreResponse = await axios.get(`/correction/getStudentScoreListByStudentID?student_id=${student.user_id}`);
-        const score = scoreResponse.data; // 假设返回的是一个字符串形式的成绩
-        setStudents((prevStudents) =>
-          prevStudents.map((s) => (s.user_id === student.user_id ? { ...s, score: score } : s))
-        );
-      } catch (error) {
-        console.error('Error fetching student score:', error);
-      }
-    });
-  }, [students]);
+  const [formVisible, setFormVisible] = useState(false);
+  const [newStudentId, setNewStudentId] = useState('');
 
   // 查看用户信息
   const handleViewUser = (user: User) => {
@@ -71,31 +61,34 @@ const Teacher_Class_Room = () => {
   };
 
   // 删除学生
-  const handleDeleteStudent = async (classID: string, studentID: number) => {
-    try {
-      await axios.delete(`/class/deleteStudentFromClass?class_id=${classID}&student_id=${studentID}`);
-      message.success('学生删除成功');
-      setStudents((prevStudents) => prevStudents.filter((s) => s.user_id !== studentID));
-    } catch (error) {
-      console.error('Error deleting student:', error);
-      message.error('删除学生时出错');
-    }
+  const handleDeleteStudent = (user_id: number) => {
+    setUsers(users.filter(user => user.user_id !== user_id));
   };
 
   // 添加学生
-  const handleAddStudent = async () => {
-    // 这里执行添加学生的操作
-    try {
-      await axios.put(`/class/addStudentToClass?class_id=${classId}&student_id=${addingStudentId}`);
-      message.success('学生添加成功');
-      // 刷新学生列表或关闭输入框等操作...
-      setAddingStudentId(''); // 清空输入框
-    } catch (error) {
-      console.error('Error adding student:', error);
-      message.error('添加学生时出错');
+  const handleAddStudent = () => {
+    if (newStudentId && !users.some(user => user.user_id.toString() === newStudentId)) {
+      const newUser: User = {
+        user_id: parseInt(newStudentId, 10),
+        username: '4325324',
+        sex: 'FeMale',
+        email: '32131@example.com',
+        phone: '11133244666',
+        first_name: '2332',
+        last_name: '12323',
+        user_role: 'Student',
+        user_class: 'Class 1',
+        create_at: '2021-05-01',
+        score: undefined,
+      };
+      setUsers([...users, newUser]);
+      setNewStudentId(''); // 清空输入框
+    } else {
+      alert('Student ID should be unique and not already in use.');
     }
   };
 
+  // 列定义
   const columns = [
     {
       title: 'ID',
@@ -111,6 +104,7 @@ const Teacher_Class_Room = () => {
       title: '成绩',
       dataIndex: 'score',
       key: 'score',
+      render: (_: any, record: User) => <>{record.score || 'N/A'}</>,
     },
     {
       title: '操作',
@@ -120,11 +114,11 @@ const Teacher_Class_Room = () => {
           <Button onClick={() => handleViewUser(record)}>查看</Button>
           <Popconfirm
             title="确定要删除该学生吗?"
-            onConfirm={() => handleDeleteStudent(params.classId!, record.user_id)}
+            onConfirm={() => handleDeleteStudent(record.user_id)}
             okText="确定"
             cancelText="取消"
           >
-            <Button danger>删除</Button>
+            <Button danger><MinusOutlined /></Button>
           </Popconfirm>
         </Space>
       ),
@@ -134,10 +128,9 @@ const Teacher_Class_Room = () => {
   return (
     <div className="teacher-class-room">
       <h1>班级学生列表</h1>
-      {/* <Table columns={columns} dataSource={students} rowKey="user_id" /> */}
       <Table
         columns={columns}
-        dataSource={students}
+        dataSource={users}
         rowKey="user_id"
         pagination={false}
       />
@@ -145,20 +138,21 @@ const Teacher_Class_Room = () => {
       <Space className="add-student-container" align="baseline">
         <Input.Search
           placeholder="输入学生ID"
-          value={addingStudentId}
-          onChange={(e) => setAddingStudentId(e.target.value)}
-          // onSearch={(value) => handleSearchStudent(value)} // 注意这里的更改
+          value={newStudentId}
+          onChange={(e) => setNewStudentId(e.target.value)}
           style={{ width: 200, marginBottom: 16 }}
+          onSearch={value => handleAddStudent()}
         />
         <Button
           type="primary"
-          onClick={handleAddStudent} // 确保这里调用的是添加学生的函数
+          onClick={handleAddStudent}
           icon={<PlusOutlined />}
           block
         >
           添加学生
         </Button>
       </Space>
+
       <Modal
         title="用户信息"
         visible={formVisible}
@@ -178,6 +172,7 @@ const Teacher_Class_Room = () => {
               <li>权限: {selectedUser.user_role}</li>
               <li>班级: {selectedUser.user_class}</li>
               <li>创建时间: {selectedUser.create_at}</li>
+              <li>成绩: {selectedUser.score || '暂无成绩'}</li>
             </ul>
           </div>
         )}

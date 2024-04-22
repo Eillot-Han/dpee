@@ -51,17 +51,17 @@ const Admin_Classm = () => {
       dataIndex: 'student_count',
       key: 'student_count',
     },
-    {
-      title: 'Description',
-      key: 'description',
-      render: (description: string | undefined) => (
-        <Tooltip title={description || 'No description'}>
-          <Typography.Text ellipsis>
-            {description || 'No description'}
-          </Typography.Text>
-        </Tooltip>
-      ),
-    },
+    // {
+    //   title: 'Description',
+    //   key: 'description',
+    //   render: (description: string | undefined) => (
+    //     <Tooltip title={description || 'No description'}>
+    //       <Typography.Text ellipsis>
+    //         {description || 'No description'}
+    //       </Typography.Text>
+    //     </Tooltip>
+    //   ),
+    // },
     {
       title: 'Action',
       key: 'action',
