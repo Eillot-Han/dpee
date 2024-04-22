@@ -5,7 +5,9 @@ import (
 	"dpee-golang/initialize"
 	"fmt"
 	"github.com/go-redis/redis"
+	"math/rand"
 	"os"
+	"time"
 )
 
 func main() {
@@ -13,6 +15,7 @@ func main() {
 	global.DB = initialize.Gorm()
 	db, _ := global.DB.DB()
 	defer db.Close()
+	global.Rand = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 	// 初始化数据库
 	global.TestDB = initialize.TestGorm()

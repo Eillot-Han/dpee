@@ -4,9 +4,11 @@ import (
 	"dpee-golang/global"
 	"dpee-golang/model"
 	"dpee-golang/model/response"
+	"encoding/csv"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 	"strconv"
+	"time"
 )
 
 //初步设定提交的同时开始修改试卷，也就是状态一经改变就开始批改试卷
@@ -28,14 +30,14 @@ func Correction(examID int) {
 
 // Correction1 自动批改试卷
 func Correction1(c *gin.Context) {
-	examID := c.Param("exam_id")
+	examID := c.PostForm("exam_id")
 	examID1, _ := strconv.Atoi(examID)
-	studentID := c.Param("student_id")
+	studentID := c.PostForm("student_id")
 	studentID1, _ := strconv.Atoi(studentID)
 	//根据examid和studentid搜索studentExamId
 	var studentExams model.StudentExams
 	db := global.DB
-	db.Where("exam_id = ? and student_id = ?", examID1, studentID1).Find(studentExams)
+	db.Where("exam_id = ? and student_id = ?", examID1, studentID1).Find(&studentExams)
 	studentExamId1 := int(studentExams.StudentExamID)
 	//通过examid搜索studentAnswer,然后遍历进行批改答案
 	studentAnswer := GetStudentAnswerByExamID(studentExamId1)
@@ -154,6 +156,61 @@ func GetStudentExams(c *gin.Context) {
 	examIDInt, _ := strconv.Atoi(examID)
 	studentExamList := GetStudentExamListByExamID(examIDInt)
 	response.OkWithData(studentExamList, c)
+}
+
+func ExportStudentExams(c *gin.Context) {
+	// 从查询参数中获取考试ID
+	examIDStr := c.Query("exam_id")
+	if examIDStr == "" {
+		c.JSON(400, gin.H{"error": "缺少考试ID"})
+		return
+	}
+	examID, _ := strconv.Atoi(examIDStr) // 真实场景中需要检查错误
+
+	// 查询数据库获取学生考试成绩
+	studentExams := GetStudentExamListByExamID(examID)
+
+	// 设置 CSV 响应头
+	c.Header("Content-Disposition", `attachment; filename="student_exams.csv"`)
+	c.Header("Content-Type", "text/csv")
+
+	// 创建 CSV 写入器
+	writer := csv.NewWriter(c.Writer)
+	defer writer.Flush()
+
+	// 写入 CSV 标题行
+	err := writer.Write([]string{"Student Exam ID", "Student ID", "Exam ID", "Start Time", "Submitted At", "Score", "Status"})
+	if err != nil {
+		c.JSON(500, gin.H{"error": "写入CSV标题失败"})
+		return
+	}
+
+	// 写入 CSV 数据行
+	for _, exam := range studentExams {
+		err := writer.Write([]string{
+			strconv.FormatUint(uint64(exam.StudentExamID), 10),
+			strconv.FormatUint(uint64(exam.StudentID), 10),
+			strconv.FormatUint(uint64(exam.ExamID), 10),
+			exam.StartTime.Format(time.RFC3339Nano),
+			exam.SubmittedAt.Format(time.RFC3339Nano),
+			strconv.Itoa(exam.Score),
+			exam.Status,
+		})
+		if err != nil {
+			c.JSON(500, gin.H{"error": "写入CSV数据失败"})
+			return
+		}
+	}
+
+	// 确保所有数据都被写入
+	writer.Flush()
+	if writer.Error() != nil {
+		c.JSON(500, gin.H{"error": "写入CSV失败"})
+		return
+	}
+
+	// 设置响应状态码
+	c.Status(200)
 }
 
 // CheckSQL 检查sql语法

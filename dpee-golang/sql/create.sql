@@ -36,16 +36,16 @@ CREATE TABLE classes
 
 CREATE TABLE exams
 (
-    Exams_ID          SERIAL PRIMARY KEY,
+    Exams_ID         SERIAL PRIMARY KEY,
     Exams_name       VARCHAR(100),
     Description      TEXT,
-    Subject_ID       VARCHAR(100),
+    Subject_ID       INT,
     Location         VARCHAR(200),
     Class_ID         INT,
     Start_Time       TIMESTAMP,
     End_Time         TIMESTAMP,
     Duration_Minutes INT,
-    Total_Question  INT NOT NULL,
+    Total_Question   INT NOT NULL,
     Create_By        INT,
     Create_At        TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_exams_user FOREIGN KEY (Create_By) REFERENCES Users (User_ID)

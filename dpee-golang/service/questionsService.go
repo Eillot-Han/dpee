@@ -171,13 +171,13 @@ func ShowQuestionsByDifficulty(c *gin.Context) {
 func ShowQuestionsByPage(c *gin.Context) {
 	page := c.Query("page")
 	if page == "" {
-		response.FailWithMessage("参数错误", c)
+		response.FailWithMessage("page参数错误", c)
 		return
 	}
 	pageInt, _ := strconv.Atoi(page)
 	user_id := c.Query("user_id")
 	if user_id == "" {
-		response.FailWithMessage("参数错误", c)
+		response.FailWithMessage("user_id参数错误", c)
 		return
 	}
 	user_idInt, _ := strconv.Atoi(user_id)

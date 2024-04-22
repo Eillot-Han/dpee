@@ -11,6 +11,7 @@ import Teacher from '@/modules/Teacher'
 import Teacher_Class from '@/modules/Teacher_Class'
 import Teacher_Class_Room from '@/modules/Teacher_Class_Room'
 import Teacher_Exams from '@/modules/Teacher_Exams'
+import Teacher_Question_CREATE from '@/modules/Teacher_Question_CREATE'
 import Teacher_Questions from '@/modules/Teacher_Questions'
 import Teacher_User from '@/modules/Teacher_User'
 import Login from '@/modules/login'
@@ -106,6 +107,11 @@ const routes = [
     path: '/teacher/classroom',
     element: <Teacher_Class_Room />,
     title: '班级界面',
+  },
+  {
+    path: '/createQuestion',
+    element: <Teacher_Question_CREATE />,
+    title: '创建题目',
   },
 ]
 

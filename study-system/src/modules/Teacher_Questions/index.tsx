@@ -31,12 +31,12 @@ const Teacher_Questions = () => {
   const fetchQuestions = async (page: number, type?: string, content?: string) => {
     setLoading(true);
     try {
-      let url = `/questions/showQuestionsByPage?page=${page}`;
+      let url = `/questions/showQuestionsByPage?page=${page}&user_id=${localStorage.getItem('userId')}`;
       if (type) {
-        url += `&question_type=${encodeURIComponent(type)}`;
+        url = `/questions/showQuestionsByType?page=${page}&question_type=${encodeURIComponent(type)}`;
       }
       if (content) {
-        url += `&question_content=${encodeURIComponent(content)}`;
+        url = `/questions/showQuestionsByContent?page=${page}&question_content=${encodeURIComponent(content)}`;
       }
       const response = await axios.get<{ data: Question[], total: number }>(url);
       setQuestions(response.data.data);
@@ -85,7 +85,7 @@ const Teacher_Questions = () => {
         key={item.question_id}
         onClick={() => {
           localStorage.setItem('questionId', item.question_id.toString());
-          navigate('/createQuestion', { state: { from: location } });
+          // navigate('/createQuestion', { state: { from: location } });
         }}
       >
         <List.Item.Meta

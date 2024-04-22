@@ -6,6 +6,9 @@ import (
 	"dpee-golang/model/response"
 	"encoding/csv"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
+	"log"
+	"math/rand"
 	"net/http"
 	"strconv"
 	"time"
@@ -15,10 +18,12 @@ import (
 func ExtractQuestionsByType(c *gin.Context) {
 	questionType := c.Query("type")
 	num := c.Query("num")
+	userId := c.Query("user_id")
+	userIdInt, _ := strconv.Atoi(userId)
 	numInt, _ := strconv.Atoi(num)
 	questions := extractQuestionsByType(questionType, numInt)
 	//随机生成试卷ID并判断是否已存在，并将试卷和题目的关系写入examQuestion表中
-	examID := createExam(numInt)
+	examID := createExam(numInt, userIdInt)
 	createExamQuestion(examID, questions)
 	questions = getQuestionsByExamID(examID)
 	response.OkWithData(questions, c)
@@ -83,20 +88,42 @@ func RandomSelect(questionList []model.Questions, num int) []model.Questions {
 }
 
 // 随机生成试卷ID并判断是否已存在
-func createExam(num int) uint {
-	var exam model.Exams
+func createExam(num int, userIdInt int) uint {
 	db := global.DB
-	for {
-		examID := global.Rand.Intn(1000000000)
+	var exam model.Exams
+	examID := uint(0) // 初始化 examID
+	maxAttempts := 10 // 设置最大尝试次数
+
+	for attempts := 0; attempts < maxAttempts; attempts++ {
+		// 使用 Rand 生成随机的 examID
+		rand.Seed(time.Now().UnixNano()) // 确保每次运行时种子不同
+		examID = uint(rand.Intn(1000000000))
+
+		// 检查生成的 examID 是否已经存在
 		db.Where("exams_id = ?", examID).First(&exam)
 		if exam.ExamsID == 0 {
-			exam.ExamsID = uint(examID)
+			// 如果不存在，使用这个 examID 创建考试记录
+			exam.ExamsID = examID
 			exam.TotalQuestion = num
-			db.Create(&exam)
-			break
+			exam.ExamsName = "Default Exam Name"
+			exam.Description = "Default Description"
+			exam.Location = "Default Location"
+			exam.ClassID = 1
+			exam.SubjectID = 1
+			exam.CreateBy = uint(userIdInt)
+			result := db.Create(&exam)
+			if result.Error != nil {
+				// 如果创建失败，记录错误并重试
+				log.Printf("Failed to create exam record: %v\n", result.Error)
+				continue
+			}
+			return examID
 		}
 	}
-	return exam.ExamsID
+
+	// 如果尝试了多次都没有生成唯一的 examID，返回 0 并记录错误
+	log.Println("Failed to generate unique examID after multiple attempts")
+	return 0
 }
 
 // 将试卷和题目的关系写入examQuestion表中
@@ -104,10 +131,14 @@ func createExamQuestion(examID uint, questions []response.QuestionsResponse) {
 	var examQuestion model.ExamQuestionList
 	db := global.DB
 	for _, question := range questions {
+		examQuestion.QuestionNumber = global.Rand.Intn(int(examID))
 		examQuestion.ExamID = examID
 		examQuestion.QuestionID = question.QuestionID
 		db.Create(&examQuestion)
+		//db.Model(&model.Exams{}).Where("exams_id = ?", examID).Update("total_question", gorm.Expr("total_question + 1"))
 	}
+	//exam表的题目数量+1
+	db.Model(&model.Exams{}).Where("exams_id = ?", examID).Update("total_question", gorm.Expr("total_question + ?", len(questions)))
 }
 
 // 解除试卷和题目的关系
@@ -330,6 +361,7 @@ func ShowExamByTeacherID(c *gin.Context) {
 		examResponse.ExamsName = exam.ExamsName
 		examResponse.Location = exam.Location
 		examResponse.StartTime = exam.StartTime
+		examResponse.TotalQuestion = exam.TotalQuestion
 		examResponse.SubjectID = exam.SubjectID
 		examResponseList = append(examResponseList, examResponse)
 	}

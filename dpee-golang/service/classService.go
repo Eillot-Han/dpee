@@ -152,7 +152,7 @@ func DeleteStudentFromClass(c *gin.Context) {
 
 // ShowStudentsByClassID 通过classid显示该班级学生
 func ShowStudentsByClassID(c *gin.Context) {
-	classId := c.Param("class_id")
+	classId := c.Query("class_id")
 	classIdInt, _ := strconv.Atoi(classId)
 	db := global.DB
 	var students []model.UserClasses
