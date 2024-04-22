@@ -806,7 +806,7 @@ func ShowQuestionByPage(c *gin.Context) {
 func UpdateStatus(examID int) {
 	db := global.DB
 	var studentExams []model.StudentExams
-	if err := db.Where("exam_id = ?", examID).Find(&studentExams).Error; err != nil {
+	if err := db.Where("student_exam_id = ?", examID).Find(&studentExams).Error; err != nil {
 		return
 	}
 	for _, studentExam := range studentExams {

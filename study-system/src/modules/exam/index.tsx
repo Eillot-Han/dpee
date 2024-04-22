@@ -67,6 +67,7 @@ const Exam = () => {
         console.error('提交答案失败:', error);
         message.error('答案提交失败');
       });
+      axios.post('/correction/correction',{exam_id: examID, student_id: studentID})
   };
   const submitAnswers = () => {
     //  实现将答案对象提交到服务器的逻辑

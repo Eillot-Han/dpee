@@ -30,25 +30,32 @@ func Correction(examID int) {
 func Correction1(c *gin.Context) {
 	examID := c.Param("exam_id")
 	examID1, _ := strconv.Atoi(examID)
+	studentID := c.Param("student_id")
+	studentID1, _ := strconv.Atoi(studentID)
+	//根据examid和studentid搜索studentExamId
+	var studentExams model.StudentExams
+	db := global.DB
+	db.Where("exam_id = ? and student_id = ?", examID1, studentID1).Find(studentExams)
+	studentExamId1 := studentExams.StudentExamID
 	//通过examid搜索studentAnswer,然后遍历进行批改答案
-	studentAnswer := GetStudentAnswerByExamID(examID1)
+	studentAnswer := GetStudentAnswerByExamID(studentExamId1)
 	for _, v := range studentAnswer {
 		//通过questionid搜索question
 		question := GetQuestionByID(v.QuestionID)
 		CorrectionAnswer(v, question)
 	}
 	//更改状态为已批改
-	UpdateStatus(examID1)
+	UpdateStatus(studentExamId1)
 	//更新分数
-	UpdateStudentScore(examID1)
+	UpdateStudentScore(studentExamId1)
 	response.OkWithMessage("批改成功", c)
 }
 
 // GetStudentAnswerByExamID 搜索studentAnswer
-func GetStudentAnswerByExamID(examID int) []model.StudentAnswers {
+func GetStudentAnswerByExamID(studentExamID int) []model.StudentAnswers {
 	var studentAnswer []model.StudentAnswers
 	db := global.DB
-	db.Where("exam_id = ?", examID).Find(&studentAnswer)
+	db.Where("student_exam_id = ?", studentExamID).Find(&studentAnswer)
 	return studentAnswer
 }
 
