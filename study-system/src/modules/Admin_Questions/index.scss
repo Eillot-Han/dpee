@@ -1,218 +1,79 @@
-@import "@/styles/common.scss";
+// index.scss
 
-.login {
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
-  background: white;
-  left: 0;
-  top: 0;
-  @include flex(row, space-between, center);
+// 设置一些基本的变量
+$primary-color: #1890ff; // 主题蓝色
+$text-color: #000000; // 文本颜色
+$background-color: #ffffff; // 页面背景颜色
+$border-color: #e8e8e8; // 边框颜色
+$padding: 16px; // 通用内边距
 
-  .login-logo {
-    display: none;
+.teacher-classm {
+  padding: $padding;
+  background-color: $background-color;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    text-align: center;
+    color: $text-color;
+    margin-bottom: $padding;
   }
 
-  .login-leftside {
-    height: 100vh;
-    width: 100%;
-    @include flex(column, center, center);
-    gap: 20px;
+  .ant-table {
+    background-color: $background-color;
+    border: 1px solid $border-color;
+    border-radius: 4px;
 
-    p {
-      width: 80%;
+    .ant-table-thead > tr > th {
+      background-color: $primary-color;
+      color: $background-color;
+      border-bottom: none;
     }
 
-    h1 {
-      width: 80%;
+    .ant-table-tbody > tr > td {
+      border-bottom: 1px solid $border-color;
+    }
+
+    .ant-table-pagination {
+      margin: $padding 0;
     }
   }
 
-  .login-leftside-small {
-    display: none;
+  .ant-tooltip {
+    // 确保 Tooltip 内容不会换行
+    .ant-tooltip-inner {
+      white-space: nowrap;
+    }
   }
 
-  .login-rightside {
-    flex-grow: 1;
-    height: 100vh;
-    @include flex(column, center, center);
+  // 按钮样式
+  .ant-btn {
+    margin-right: 10px;
 
-    .back-box {
-      width: 420px;
-      margin-bottom: 20px;
+    &-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
     }
 
-    .login-wrapper {
-      width: 620px;
-      @include flex(column, flex-start, center);
-      background-color: $main-back;
-      box-shadow: 6px 6px 20px 0px rgba(153, 153, 153, 0.05);
-      border-radius: 8px;
-      padding: 32px 40px;
+    &-danger {
+      color: #ff4d4f; // 危险按钮的文字颜色
+      background-color: $background-color;
+      border-color: #ff4d4f;
 
-      .login-title {
-        @include PF-22-bold($neutral7);
-        margin-bottom: 32px;
-      }
-
-      .login-card-content {
-        width: 100%;
-      }
-
-      .login-card-bottom {
-        @include PF-14-thin($neutral5);
-        width: 100%;
-        text-align: end;
-
-        a {
-          color: blue;
-          cursor: pointer;
-
-          &:hover {
-            color: rgb(10, 161, 255);
-          }
-        }
+      &:hover,
+      &:focus {
+        color: $background-color;
+        background-color: #ff4d4f;
       }
     }
   }
 }
 
-@media screen and (max-width: 1080px) {
-  .login {
-    .login-logo {
-      display: block;
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      width: 80px;
-      z-index: 2;
-    }
-
-    .login-leftside {
-      display: none;
-    }
-
-    .login-leftside-small {
-      height: 100vh;
-      width: 635px;
-      width: 100vw;
-      display: flex;
-      position: absolute;
-      z-index: 1;
-    }
-
-    .login-rightside {
-      flex-grow: 1;
-      z-index: 2;
-
-      .back-box {
-        width: 350px;
-        margin-bottom: 20px;
-
-        .iconfont::before {
-          color: $main-back;
-        }
-
-        p {
-          color: $main-back;
-        }
-      }
-
-      .login-wrapper {
-        width: 350px;
-        height: 408px;
-        padding: 24px 24px;
-
-        .login-input-wrapper {
-          height: auto;
-
-          .login-input-placeholder-wrapper {
-            .login-input-placeholder {
-              @include PF-16-thin($neutral6);
-            }
-
-            .login-input-placeholder-choosed {
-              @include PF-12-thin($neutral4);
-            }
-
-            .login-input-placeholder-error {
-              @include PF-16-thin($error-font);
-            }
-
-            .login-input-placeholder-btn {
-              background: none;
-              border: 0;
-              position: relative;
-              top: 16px;
-            }
-          }
-
-          .login-input {
-            width: 100%;
-            border: 0;
-            padding-bottom: 4px;
-            background: linear-gradient(0deg,
-                $brand3 1px,
-                rgba(0, 0, 0, 0) 1px,
-                rgba(0, 0, 0, 0) 100%) 0/0% no-repeat $main-back;
-            border-bottom: 1px solid $neutral3;
-            @include PF-18-bold($neutral7);
-            height: 28px;
-            line-height: 26px;
-          }
-
-          .login-input-error {
-            border-bottom: 1px solid $error-font;
-          }
-
-          .login-input:focus {
-            animation: progress 0.4s 1 linear;
-            animation-fill-mode: forwards;
-            border: none;
-          }
-
-          @keyframes progress {
-            10% {
-              background-size: 60%;
-            }
-
-            30% {
-              background-size: 85%;
-            }
-
-            100% {
-              background-size: 100%;
-            }
-          }
-
-          .login-input:focus-visible {
-            outline: none;
-          }
-        }
-
-        .login-btn {
-          @include btn(100%, 46px, $main-back, $brand4, 8px);
-          font-size: 18px;
-          margin-bottom: 20px;
-          transition: 0.4s;
-        }
-
-        .login-btn:hover {
-          @include form-btn-hover();
-        }
-
-        .login-hint {
-          font-size: 14px;
-
-          .login-hint-link {
-            color: $link1;
-          }
-
-          .login-hint-link:hover {
-            font-size: 14px;
-          }
-        }
-      }
+// 响应式设计
+@media (max-width: 768px) {
+  .teacher-classm {
+    .ant-table-wrapper {
+      overflow-x: auto; // 使表格水平滚动
     }
   }
 }

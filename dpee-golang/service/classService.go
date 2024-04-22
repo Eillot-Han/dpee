@@ -149,3 +149,19 @@ func DeleteStudentFromClass(c *gin.Context) {
 	db.Where("class_id = ?", classIdInt).Update("student_count", gorm.Expr("student_count - ?", 1))
 	response.OkWithMessage("学生删除成功", c)
 }
+
+// ShowStudentsByClassID 通过classid显示该班级学生
+func ShowStudentsByClassID(c *gin.Context) {
+	classId := c.Param("class_id")
+	classIdInt, _ := strconv.Atoi(classId)
+	db := global.DB
+	var students []model.UserClasses
+	db.Where("class_id = ?", classIdInt).Find(&students)
+	var users []model.User
+	for _, student := range students {
+		var user model.User
+		db.Where("user_id = ?", student.UserID).First(&user)
+		users = append(users, user)
+	}
+	response.OkWithData(users, c)
+}

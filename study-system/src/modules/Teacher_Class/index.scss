@@ -1,14 +1,79 @@
-@import "@/styles/common.scss";
+// index.scss
 
+// 设置一些基本的变量
+$primary-color: #1890ff; // 主题蓝色
+$text-color: #000000; // 文本颜色
+$background-color: #ffffff; // 页面背景颜色
+$border-color: #e8e8e8; // 边框颜色
+$padding: 16px; // 通用内边距
 
-.ant-list-item-meta-title{
-  left: 20;
-  width: 70%;
+.teacher-classm {
+  padding: $padding;
+  background-color: $background-color;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  h1 {
+    text-align: center;
+    color: $text-color;
+    margin-bottom: $padding;
+  }
+
+  .ant-table {
+    background-color: $background-color;
+    border: 1px solid $border-color;
+    border-radius: 4px;
+
+    .ant-table-thead > tr > th {
+      background-color: $primary-color;
+      color: $background-color;
+      border-bottom: none;
+    }
+
+    .ant-table-tbody > tr > td {
+      border-bottom: 1px solid $border-color;
+    }
+
+    .ant-table-pagination {
+      margin: $padding 0;
+    }
+  }
+
+  .ant-tooltip {
+    // 确保 Tooltip 内容不会换行
+    .ant-tooltip-inner {
+      white-space: nowrap;
+    }
+  }
+
+  // 按钮样式
+  .ant-btn {
+    margin-right: 10px;
+
+    &-primary {
+      background-color: $primary-color;
+      border-color: $primary-color;
+    }
+
+    &-danger {
+      color: #ff4d4f; // 危险按钮的文字颜色
+      background-color: $background-color;
+      border-color: #ff4d4f;
+
+      &:hover,
+      &:focus {
+        color: $background-color;
+        background-color: #ff4d4f;
+      }
+    }
+  }
 }
 
-.classroom-list-container{
-  background: white;
-}
-button{
-  right: 0;
+// 响应式设计
+@media (max-width: 768px) {
+  .teacher-classm {
+    .ant-table-wrapper {
+      overflow-x: auto; // 使表格水平滚动
+    }
+  }
 }

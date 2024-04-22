@@ -206,3 +206,23 @@ func CheckSQL(sql string) bool {
 //}
 
 //负载均衡
+
+// GetStudentScoreListByExamID 根据examid返回学生成绩
+func GetStudentScoreListByExamID(c *gin.Context) {
+	examID := c.Query("exam_id")
+	examIDInt, _ := strconv.Atoi(examID)
+	//用exam_id查询到student_exam表
+	studentExamList := GetStudentExamListByExamID(examIDInt)
+	response.OkWithData(studentExamList, c)
+}
+
+// GetStudentScoreListByStudentID 根据学生id返回学生成绩
+func GetStudentScoreListByStudentID(c *gin.Context) {
+	studentID := c.Query("student_id")
+	studentIDInt, _ := strconv.Atoi(studentID)
+	//用student_id查询到student_exam表
+	db := global.DB
+	var studentExamList model.StudentExams
+	db.Where("student_id = ?", studentIDInt).First(&studentExamList)
+	response.OkWithData(studentExamList.Score, c)
+}

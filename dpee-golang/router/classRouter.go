@@ -13,4 +13,5 @@ func RegisterClass(r *gin.RouterGroup) {
 	r.PUT("/updateClass", service.UpdateClass)
 	r.DELETE("/deleteClass", service.DeleteClass)
 	r.PUT("/addStudentToClass", service.AddStudentToClass)
+	r.GET("/showStudentsByClassID", service.ShowStudentsByClassID)
 }
