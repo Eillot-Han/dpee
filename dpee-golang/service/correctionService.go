@@ -36,7 +36,7 @@ func Correction1(c *gin.Context) {
 	var studentExams model.StudentExams
 	db := global.DB
 	db.Where("exam_id = ? and student_id = ?", examID1, studentID1).Find(studentExams)
-	studentExamId1 := studentExams.StudentExamID
+	studentExamId1 := int(studentExams.StudentExamID)
 	//通过examid搜索studentAnswer,然后遍历进行批改答案
 	studentAnswer := GetStudentAnswerByExamID(studentExamId1)
 	for _, v := range studentAnswer {
