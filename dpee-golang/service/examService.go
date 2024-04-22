@@ -4,7 +4,9 @@ import (
 	"dpee-golang/global"
 	"dpee-golang/model"
 	"dpee-golang/model/response"
+	"encoding/csv"
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -837,8 +839,22 @@ func GetStudentExamListByExamID(examIDInt int) []model.StudentExams {
 }
 
 // ExportExam 导出整张试卷，包含题目内容等
+//func ExportExam(c *gin.Context) {
+//	//读出题目集
+//	examID := c.Query("exam_id")
+//	examIDInt, _ := strconv.Atoi(examID)
+//	if examIDInt == 0 {
+//		response.FailWithMessage("试卷ID不能为空", c)
+//		return
+//	}
+//	questions := getQuestionsByExamID(uint(examIDInt))
+//	response.OkWithData(gin.H{
+//		"questions": questions,
+//	}, c)
+//}
+
 func ExportExam(c *gin.Context) {
-	//读出题目集
+	// 读取题目集
 	examID := c.Query("exam_id")
 	examIDInt, _ := strconv.Atoi(examID)
 	if examIDInt == 0 {
@@ -846,7 +862,40 @@ func ExportExam(c *gin.Context) {
 		return
 	}
 	questions := getQuestionsByExamID(uint(examIDInt))
-	response.OkWithData(gin.H{
-		"questions": questions,
-	}, c)
+
+	// 设置 CSV 响应头
+	c.Header("Content-Type", "text/csv")
+	c.Header("Content-Disposition", `attachment; filename="questions.csv"`)
+	// 创建 CSV 写入器
+	writer := csv.NewWriter(c.Writer)
+	defer writer.Flush()
+	// 写入 CSV 标题行
+	err := writer.Write([]string{"Question ID", "Question Content", "Type", "Difficulty", "Points"})
+	if err != nil {
+		response.FailWithMessage("创建 CSV 标题失败", c)
+		return
+	}
+	// 写入 CSV 数据行
+	for _, question := range questions {
+		err := writer.Write([]string{
+			strconv.Itoa(int(question.QuestionID)),
+			question.QuestionContent,
+			question.Type,
+			strconv.Itoa(int(question.Difficulty)),
+			strconv.Itoa(question.Points),
+		})
+		if err != nil {
+			response.FailWithMessage("写入 CSV 数据失败", c)
+			return
+		}
+	}
+	// 确保所有数据都被写入
+	writer.Flush()
+	if writer.Error() != nil {
+		response.FailWithMessage("写入 CSV 失败", c)
+		return
+	}
+	// 设置响应状态码
+	c.Status(http.StatusOK)
+	//response.Ok(c)
 }

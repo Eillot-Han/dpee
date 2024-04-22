@@ -1,66 +1,77 @@
 // index.scss
 
+// 设置一些基本的变量
+$primary-color: #1890ff; // 主题蓝色
+$text-color: #000000; // 文本颜色
+$background-color: #ffffff; // 页面背景颜色
+$border-radius: 4px; // 通用边框半径
+
+// 教师页面容器
 .teacher {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  padding: 2rem;
+  padding: 20px;
+  background-color: $background-color;
+  max-width: 1200px;
+  margin: 0 auto;
 
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 2rem;
+    margin-bottom: 20px;
 
-    button {
-      margin-left: auto;
+    h1 {
+      margin: 0;
+      font-size: 24px;
+      color: $text-color;
+    }
+  }
+
+  .search-container {
+    margin-bottom: 20px;
+
+    .ant-input-affix-wrapper {
+      margin-right: 10px;
     }
   }
 
   .question-container {
-    width: 80%;
-    max-width: 800px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 2rem;
+    .ant-list-item {
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
 
-    .question-item {
-      display: grid;
-      grid-template-columns: 1fr minmax(auto, 600px);
-      grid-gap: 1rem;
-      align-items: center;
-      margin-bottom: 1rem;
-
-      .question-id {
-        font-weight: bold;
+      &:last-child {
+        border-bottom: none;
       }
 
-      .question-detail {
-        display: flex;
-        flex-direction: column;
-        
-        .question-content {
-          margin-bottom: 1rem;
+      .ant-list-item-meta {
+        align-items: center;
+
+        .ant-list-item-meta-title {
+          color: $text-color;
+          font-size: 16px;
         }
 
-        .tags {
+        .ant-list-item-meta-description {
           display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
-        
-        .difficulty {
-          font-size: 0.8rem;
-          text-transform: uppercase;
-          color: #888;
-          margin-top: 1rem;
+          align-items: center;
+          margin-top: 8px;
+
+          .ant-tag {
+            margin-right: 8px;
+          }
         }
       }
     }
   }
 }
 
-.tag {
-  margin-right: 0.5rem;
+// 分页组件样式
+.ant-pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+// 创建题目按钮样式
+.create-question-button {
+  margin-bottom: 20px;
 }

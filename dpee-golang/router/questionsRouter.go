@@ -14,4 +14,5 @@ func RegisterQuestions(r *gin.RouterGroup) {
 	r.GET("/showQuestionsByType", service.ShowQuestionsByType)
 	r.GET("/showQuestionsByDifficulty", service.ShowQuestionsByDifficulty)
 	r.GET("/showQuestionsByContent", service.ShowQuestionsByContent)
+	r.GET("/showQuestionsByPage", service.ShowQuestionsByPage)
 }

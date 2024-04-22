@@ -1,61 +1,99 @@
-@import "@/styles/common.scss";
-// 引入基础样式或者全局变量（如果有的话）
+// index.scss
 
-.teacher_exams {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    padding: 2rem;
-    
-    h1 {
+// Define some basic colors and typography
+$primary-color: #13c2c2; // A primary color for active buttons, links, etc.
+$secondary-color: #fff; // Background color
+$text-color: #333; // Primary text color
+$border-color: #ebedf0; // Border color for lists and inputs
+
+// Basic page layout styles
+.teacher {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: $secondary-color;
+  color: $text-color;
+  font-family: 'Arial', sans-serif;
+
+  h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  // Style for the exam list
+  .exam-list {
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+
+    thead {
+      background-color: $primary-color;
+      color: $secondary-color;
+
+      th {
+        padding: 10px;
+        border: 1px solid $border-color;
+      }
+    }
+
+    tbody td {
+      padding: 10px;
+      border: 1px solid $border-color;
       text-align: center;
-      margin-bottom: 1.5rem;
-    }
-  
-    .existing-papers-list {
-      width: 100%;
-      max-width: 960px;
-      margin-bottom: 2rem;
-  
-      & > .ant-list-header {
-        background-color: #f5f5f5;
-        padding: 0.5rem;
-      }
-    }
-  
-    .generate-paper-form {
-      width: 100%;
-      max-width: 400px;
-      display: flex;
-      flex-direction: column;
-  
-      form.ant-form {
-        display: flex;
-        flex-direction: column;
-  
-        .ant-form-item {
-          margin-bottom: 1rem;
-  
-          &:last-child {
-            margin-bottom: 0;
-          }
-  
-          .ant-select {
-            width: 100%;
-            box-sizing: border-box;
-          }
-  
-          .ant-input-number {
-            width: 100%;
-            box-sizing: border-box;
-          }
-        }
-  
-        .primary-button-container {
-          display: flex;
-          justify-content: flex-end;
-        }
-      }
     }
   }
+
+  // Style for form inputs and buttons
+  .ant-input,
+  .ant-input-number,
+  .ant-btn {
+    margin-right: 10px;
+  }
+
+  .ant-btn-primary {
+    background-color: $primary-color;
+    border-color: $primary-color;
+  }
+
+  // Style for the generate and merge forms
+  .form-actions {
+    margin-top: 20px;
+    text-align: center;
+
+    .ant-btn {
+      margin-right: 5px;
+    }
+  }
+
+  // Utility classes for spacing
+  .mb-20 {
+    margin-bottom: 20px;
+  }
+
+  // Style for the export button in the exam list
+  .export-button {
+    margin-left: 10px;
+    background-color: #fff;
+    border-color: #fff;
+    color: $primary-color;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      background-color: $primary-color;
+    }
+  }
+}
+
+// Responsive styles
+@media (max-width: 768px) {
+  .teacher {
+    .ant-input,
+    .ant-input-number,
+    .ant-btn {
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 10px;
+    }
+  }
+}

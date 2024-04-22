@@ -118,6 +118,12 @@ func ShowQuestions(c *gin.Context) {
 
 // ShowQuestionsByType 根据Type显示题目
 func ShowQuestionsByType(c *gin.Context) {
+	page := c.Query("page")
+	if page == "" {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	pageInt, _ := strconv.Atoi(page)
 	questionType := c.Query("question_type")
 	if questionType == "" {
 		response.FailWithMessage("参数错误", c)
@@ -125,12 +131,18 @@ func ShowQuestionsByType(c *gin.Context) {
 	}
 	var questions []model.Questions
 	db := global.DB
-	db.Where("type = ?", questionType).Find(&questions)
+	db.Where("type = ?", questionType).Limit(5).Offset((pageInt - 1) * 5).Find(&questions)
 	response.OkWithData(questions, c)
 }
 
 // ShowQuestionsByContent 根据题目内容模糊搜索题目
 func ShowQuestionsByContent(c *gin.Context) {
+	page := c.Query("page")
+	if page == "" {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	pageInt, _ := strconv.Atoi(page)
 	questionContent := c.Query("question_content")
 	if questionContent == "" {
 		response.FailWithMessage("参数错误", c)
@@ -138,7 +150,7 @@ func ShowQuestionsByContent(c *gin.Context) {
 	}
 	var questions []model.Questions
 	db := global.DB
-	db.Where("question_content like ?", "%"+questionContent+"%").Find(&questions)
+	db.Where("question_content like ?", "%"+questionContent+"%").Limit(5).Offset((pageInt - 1) * 5).Find(&questions)
 	response.OkWithData(questions, c)
 }
 
@@ -152,5 +164,26 @@ func ShowQuestionsByDifficulty(c *gin.Context) {
 	var questions []model.Questions
 	db := global.DB
 	db.Where("difficulty = ?", difficulty).Find(&questions)
+	response.OkWithData(questions, c)
+}
+
+// ShowQuestionsByPage 分页显示题目
+func ShowQuestionsByPage(c *gin.Context) {
+	page := c.Query("page")
+	if page == "" {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	pageInt, _ := strconv.Atoi(page)
+	user_id := c.Query("user_id")
+	if user_id == "" {
+		response.FailWithMessage("参数错误", c)
+		return
+	}
+	user_idInt, _ := strconv.Atoi(user_id)
+	//根据user_id查询题目，分页显示题目，每页5题
+	var questions []model.Questions
+	db := global.DB
+	db.Where("create_by = ?", user_idInt).Limit(5).Offset((pageInt - 1) * 5).Find(&questions)
 	response.OkWithData(questions, c)
 }

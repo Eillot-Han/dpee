@@ -5,21 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5c5c66da-ea27-42fc-80cf-6a886e73e6d1" name="Changes" comment="Changes">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/study-system/src/layouts/components/sidebar/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/layouts/components/sidebar/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/layouts/components/sidebar/menu.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/layouts/components/sidebar/menu.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Admin_Class/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Admin_Class/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Student_Exam/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Student_Exam/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Student_User/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Student_User/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Class/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Class/index.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Class/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Class/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Exams/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Exams/index.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Exams/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Exams/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Questions/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Questions/index.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/Teacher_Questions/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/Teacher_Questions/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/exam/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/exam/index.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/exam/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/exam/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/modules/teacher/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/modules/teacher/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/study-system/src/routes/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/study-system/src/routes/index.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,12 +23,12 @@
     &quot;assignee&quot;: &quot;Eillot-Han&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Eillot-Han/dpee.git&quot;,
-    &quot;accountId&quot;: &quot;7b777641-f1db-4bbd-85cd-7c5a68fcece4&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Eillot-Han/dpee.git",
+    "accountId": "62126526-187c-4836-a429-edcf1e2abdcd"
   }
-}</component>
+}]]></component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
@@ -69,7 +56,7 @@
     "git-widget-placeholder": "main",
     "go.import.settings.migrated": "true",
     "go.sdk.automatically.set": "true",
-    "last_opened_file_path": "D:/github/GitHub/dpee",
+    "last_opened_file_path": "C:/Users/yuye.wang",
     "node.js.detected.package.eslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
@@ -80,7 +67,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-gosdk-2946fb9b3188-155fe4b6e3a0-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-233.15026.17" />
+        <option value="bundled-gosdk-33c477a475b1-b97fc8a1e17c-org.jetbrains.plugins.go.sharedIndexes.bundled-GO-241.14494.238" />
+        <option value="bundled-js-predefined-1d06a55b98c1-74d2a5396914-JavaScript-GO-241.14494.238" />
       </set>
     </attachedChunks>
   </component>

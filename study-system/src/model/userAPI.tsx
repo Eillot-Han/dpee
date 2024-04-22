@@ -34,8 +34,19 @@ interface ApiResponse<T> {
     create_at: string;
   }
 
+  export interface ScoreData{
+    student_exam_id: number;
+    student_id: number;
+    exam_id: number;
+    start_time: string;
+    submitted_at: string;
+    score: number;
+    status: string;
+  }
+
   // 接口返回数据模型
 //   type LoginResponse = ApiResponse<UserData>;
   export type LoginResponse = ApiResponse<UserData>;
   export type UserResponse = ApiResponse<UserData>;
   export type ExamResponse = ApiResponse<ExamData[]>;
+  export type ScoreResponse = ApiResponse<ScoreData>;

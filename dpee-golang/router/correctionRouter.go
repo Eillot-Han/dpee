@@ -7,7 +7,8 @@ import (
 
 func RegisterCorrection(r *gin.RouterGroup) {
 	r.POST("/updateScore", service.UpdateScore)
-	r.POST("/getStudentScore", service.GetStudentScore)
+	r.GET("/getStudentScore", service.GetStudentScore)
 	r.POST("/correction", service.Correction1)
 	r.POST("/getStudentExams", service.GetStudentExams)
+	r.GET("/getStudentScoreByStudentIDAndExamID", service.GetStudentScoreByStudentIDAndExamID)
 }

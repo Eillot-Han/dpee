@@ -60,7 +60,7 @@ func GetQuestionByID(questionID uint) model.Questions {
 	return question
 }
 
-//CorrectionAnswer 批改答案
+// CorrectionAnswer 批改答案
 func CorrectionAnswer(studentAnswer model.StudentAnswers, question model.Questions) {
 	//通过question的type进行判断
 	db2 := global.TestDB
@@ -98,7 +98,7 @@ func UpdateScore(c *gin.Context) {
 	response.OkWithData("修改成功", c)
 }
 
-//UpdateStudentScore 更新学生成绩
+// UpdateStudentScore 更新学生成绩
 func UpdateStudentScore(examID int) {
 	//获取studentAnswer列表
 	studentAnswer := GetStudentAnswerByExamID(examID)
@@ -119,12 +119,26 @@ func GetStudentScore(c *gin.Context) {
 	response.OkWithData(GetStudentScoreByID(studentExamIDInt), c)
 }
 
-//GetStudentScoreByID 搜索学生成绩
+// GetStudentScoreByID 搜索学生成绩
 func GetStudentScoreByID(studentExamID int) model.StudentExams {
 	var studentExam model.StudentExams
 	db := global.DB
 	db.Where("student_exam_id = ?", studentExamID).Find(&studentExam)
 	return studentExam
+}
+
+// GetStudentScoreByStudentIDAndExamID 搜索学生成绩
+func GetStudentScoreByStudentIDAndExamID(c *gin.Context) {
+	{
+		studentID := c.Query("student_id")
+		studentIDInt, _ := strconv.Atoi(studentID)
+		examID := c.Query("exam_id")
+		examIDInt, _ := strconv.Atoi(examID)
+		db := global.DB
+		var studentExam model.StudentExams
+		db.Where("student_id = ? and exam_id = ?", studentIDInt, examIDInt).Find(&studentExam)
+		response.OkWithData(studentExam.Score, c)
+	}
 }
 
 // GetStudentExams studentExams成绩导出
