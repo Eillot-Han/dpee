@@ -16,6 +16,7 @@ import Teacher_Questions from '@/modules/Teacher_Questions'
 import Teacher_User from '@/modules/Teacher_User'
 import Login from '@/modules/login'
 import Welcome from '@/modules/welcome'
+import Teacher_Exam_Update from '@/modules/Teacher_Exam_Update'
 
 const routes = [
   {
@@ -113,6 +114,11 @@ const routes = [
     element: <Teacher_Question_CREATE />,
     title: '创建题目',
   },
+  {
+    path: '/teacher/updateExam',
+    element: <Teacher_Exam_Update />,
+    title: '创建题目',
+  }
 ]
 
 export default routes

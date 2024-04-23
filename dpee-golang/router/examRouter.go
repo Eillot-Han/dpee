@@ -31,6 +31,8 @@ func RegisterExams(r *gin.RouterGroup) {
 	r.GET("/mergeExams", service.MergeExams)
 	r.GET("/backStudentAnswerByExamID", service.BackStudentAnswerByExamID)
 	r.GET("/showExam", service.ShowExamStartTime)
+	r.GET("/updateStartTimeAndEndTime", service.UpdateStartTimeAndEndTime)
+	r.GET("/exportStudentExams", service.ExportStudentExams)
 }
 
 //选定试卷所属班级等于发布试卷

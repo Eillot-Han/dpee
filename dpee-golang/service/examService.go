@@ -483,6 +483,28 @@ func UpdateExam(c *gin.Context) {
 	response.OkWithMessage("更新试卷信息成功", c)
 }
 
+// UpdateStartTimeAndEndTime 更新试卷开始时间和结束时间
+func UpdateStartTimeAndEndTime(c *gin.Context) {
+	examID := c.Query("exam_id")
+	examIDInt, _ := strconv.Atoi(examID)
+	if examIDInt == 0 {
+		response.FailWithMessage("试卷ID不能为空", c)
+		return
+	}
+	startTime := c.Query("start_time")
+	starttime, _ := time.Parse("2006-01-02 15:04:05", startTime)
+	endTime := c.Query("end_time")
+	endtime, _ := time.Parse("2006-01-02 15:04:05", endTime)
+	db := global.DB
+	if err := db.Model(&model.Exams{}).Where("exams_id = ?", examIDInt).Updates(model.Exams{
+		StartTime: starttime,
+		EndTime:   endtime,
+	}).Error; err != nil {
+		response.FailWithMessage("更新试卷开始时间和结束时间失败", c)
+	}
+	response.OkWithMessage("更新试卷开始时间和结束时间成功", c)
+}
+
 // GetStartTimeByExamID 根据试卷id返回开始时间
 func GetStartTimeByExamID(c *gin.Context) {
 	examID := c.Query("exam_id")

@@ -13,6 +13,9 @@ type Exam = {
   // 其他字段根据实际情况添加
 };
 
+// 待添加
+// localStorage.setItem('userInfo', JSON.stringify(userData));
+
 const Teacher_Exams = () => {
   const navigate = useNavigate();
   const [exams, setExams] = useState<Exam[]>([]);
@@ -115,6 +118,7 @@ const Teacher_Exams = () => {
               title={<Typography.Text ellipsis>{exam.exams_name}</Typography.Text>}
               description={
                 <Space>
+                  <Typography.Text type="secondary">{exam.exams_id}</Typography.Text>
                   <Typography.Text type="secondary">{exam.description}</Typography.Text>
                   <Typography.Text type="secondary">{`题目总数: ${exam.total_question}`}</Typography.Text>
                 </Space>
