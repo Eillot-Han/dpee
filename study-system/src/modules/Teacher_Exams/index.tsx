@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { List, Button, Input, InputNumber, Select, message, Typography, Space } from 'antd';
+import { List, Button, Input, InputNumber, Select, message, Typography, Space, DatePicker } from 'antd';
 import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs'; // 正确导入 Dayjs 类型
+import 'dayjs/locale/zh-cn'; // 导入所需的语言包，这里是中文
 import { useNavigate } from 'react-router-dom';
 import './index.scss';
-
 // 考试数据结构
 type Exam = {
   exams_id: number;
@@ -22,9 +23,12 @@ const Teacher_Exams = () => {
   const [teacherId, setTeacherId] = useState<number>(0);
   const [examId1, setExamId1] = useState<string>('');
   const [examId2, setExamId2] = useState<string>('');
+  const [exportExamId, setExportExamId] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(10);
   const [type, setType] = useState<string>('');
   const [num, setNumState] = useState<number>(0);
+  const [startTime, setStartTime] = useState<Dayjs | null>(null); // 开始时间
+  const [endTime, setEndTime] = useState<Dayjs | null>(null); // 结束时间
   const setNum = (value: number | null) => {
     if (value !== null && value !== undefined) {
       setNumState(value);
@@ -72,6 +76,60 @@ const Teacher_Exams = () => {
     });
   };
 
+   // 处理开始时间选择
+   const handleStartChange = (date: Dayjs | null, dateString: string) => {
+    setStartTime(date);
+  };
+
+  // 处理结束时间选择
+  const handleEndChange = (date: Dayjs | null, dateString: string) => {
+    setEndTime(date);
+  };
+
+  // 更新考试的开始时间和结束时间
+  const handleUpdateTime = () => {
+    if (!exportExamId || !startTime || !endTime) {
+      message.warning('请填写完整的信息');
+      return;
+    }
+    axios({
+      url: `/exams/updateStartTimeAndEndTime`,
+      method: 'GET',
+      params: {
+        exams_id: exportExamId,
+        start_time: startTime.toISOString().slice(0, 19), // 转换为 ISO 字符串，不含毫秒
+        end_time: endTime.toISOString().slice(0, 19),
+      },
+    }).then((response) => {
+      message.success('更新成功');
+      // 可能需要的其他逻辑处理...
+    }).catch((error) => {
+      console.error('Update time error:', error);
+      message.error('更新失败');
+    });
+  };
+
+  // 导出成绩
+  const handleScoreExport = () => {
+    axios({
+      url: `/exams/exportStudentExams?exam_id=${exportExamId}`,
+      method: 'GET',
+      responseType: 'blob', // 重要
+    }).then((response) => {
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `score_${exportExamId}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      message.success('导出成绩成功');
+    }).catch((error) => {
+      console.error('Export score error:', error);
+      message.error('导出成绩失败');
+    });
+  };
   // 生成试卷
   const handlePaperGeneration = () => {
     axios.get(`/exams/extractQuestionsByType?user_id=${localStorage.getItem('userId')}&type=${type}&num=${num}`).then((response) => {
@@ -168,6 +226,46 @@ const Teacher_Exams = () => {
           合并试卷
         </Button>
       </div>
+      <div className="export-score-form">
+        <Input.Search
+          placeholder="输入考试ID"
+          value={exportExamId}
+          onChange={(e) => setExportExamId(e.target.value)}
+          style={{ width: 200, marginBottom: 20 }}
+        />
+        <Button
+          type="primary"
+          onClick={handleScoreExport}
+        >
+          导出成绩
+        </Button>
+      </div>
+      <div className="update-time-form">
+          <Space direction="vertical">
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="选择开始时间"
+              value={startTime}
+              onChange={handleStartChange}
+              style={{ width: 200, marginBottom: 20 }}
+            />
+            <DatePicker
+              showTime
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="选择结束时间"
+              value={endTime}
+              onChange={handleEndChange}
+              style={{ width: 200, marginBottom: 20 }}
+            />
+            <Button
+              type="primary"
+              onClick={handleUpdateTime}
+            >
+              更新时间
+            </Button>
+          </Space>
+        </div>
     </div>
   );
 };

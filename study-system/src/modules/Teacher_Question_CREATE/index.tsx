@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Input, InputNumber, Select, Button, message } from 'antd';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import './index.scss';
 // 定义题目数据结构
 type QuestionFormData = {
   question_id: any;

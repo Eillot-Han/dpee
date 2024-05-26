@@ -110,9 +110,15 @@ func DeleteQuestions(c *gin.Context) {
 
 // ShowQuestions 显示所有题目
 func ShowQuestions(c *gin.Context) {
+	page := c.Query("page")
+	if page == "" {
+		response.FailWithMessage("page参数错误", c)
+		return
+	}
+	pageInt, _ := strconv.Atoi(page)
 	var questions []model.Questions
 	db := global.DB
-	db.Find(&questions)
+	db.Limit(5).Offset((pageInt - 1) * 5).Find(&questions)
 	response.OkWithData(questions, c)
 }
 

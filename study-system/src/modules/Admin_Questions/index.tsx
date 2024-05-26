@@ -31,7 +31,7 @@ const Admin_Questions = () => {
   const fetchQuestions = async (page: number, type?: string, content?: string) => {
     setLoading(true);
     try {
-      let url = `/questions/showQuestionsByPage?page=${page}`;
+      let url = `/questions/showQuestions?page=${page}`;
       if (type) {
         url += `&question_type=${encodeURIComponent(type)}`;
       }

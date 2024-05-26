@@ -5,17 +5,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import './index.scss';
 // 题目数据结构
-type Question = {
-  question_id: number;
-  question_content: string;
-  type: string;
-  difficulty: number;
-  points: number;
-  // 其他字段根据实际情况添加
-};
 type Users = {
   user_id: number;
-  user_name: string;
+  username: string;
   phone: string;
   email: string;
   user_role: string;
@@ -72,11 +64,12 @@ const Admin_Users = () => {
   const updateUserRole = async (userId: string, role: string) => {
     try {
       const formData = new FormData();
-        formData.append('user_id', userId);
-        formData.append('role', role);
-      await axios.post('/roles/updateRoles', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
+      formData.append('account', userId);
+      formData.append('role', role);
+      await axios.get('/roles/updateRoles',{
+        params: {
+          account: userId,
+          role: role,
         },
       })
       message.success('角色更新成功');
@@ -120,6 +113,7 @@ const Admin_Users = () => {
     fetchUsers(pageNumber, user_id ?? undefined, user_name ?? undefined);
   }, [location.key]);
 
+  console.log(users);
   const renderUserItem = (item: Users) => {
     return (
       <List.Item
@@ -130,12 +124,14 @@ const Admin_Users = () => {
         }}
       >
         <List.Item.Meta
-          title={<Typography.Text ellipsis>{item.user_name}</Typography.Text>}
+          // title={<Typography.Text ellipsis>{item.user_name}</Typography.Text>}
           description={
             <>
+              <Typography.Text type="secondary" style={{ margin: '0 8px' }}>{`用户ID: ${item.user_id}`}</Typography.Text> {' '}
+              <Typography.Text type="secondary" style={{ margin: '0 8px' }}>{`用户名称: ${item.username}`}</Typography.Text> {' '}
+              <Typography.Text type="secondary" style={{ margin: '0 8px' }}>{`手机号: ${item.phone}  `}</Typography.Text>&nbsp;
+              <Typography.Text type="secondary" style={{ margin: '0 8px' }}>{`邮箱: ${item.email}`}</Typography.Text>
               <Tag color="blue">{item.user_role}</Tag>
-              <Typography.Text type="secondary">{`手机号: ${item.phone}`}</Typography.Text>
-              <Typography.Text type="secondary">{`邮箱: ${item.email}`}</Typography.Text>
             </>
           }
         />

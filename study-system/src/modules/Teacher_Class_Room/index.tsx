@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
-import { Table, Button, Space, Popconfirm, Input, Modal, Typography } from 'antd';
+import { Table, Button, Space, Popconfirm, Input, Modal, Typography, message } from 'antd';
 import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import dayjs, { Dayjs } from 'dayjs'; // 正确导入 Dayjs 类型
+import 'dayjs/locale/zh-cn'; // 导入所需的语言包，这里是中文
+import { useNavigate } from 'react-router-dom';
+import './index.scss';
 // 学生数据结构
 type User = {
   user_id: number;
@@ -17,36 +21,7 @@ type User = {
   score?: string;
 };
 
-// 初始模拟数据
-const initialUsers: User[] = [
-  {
-    user_id: 1,
-    username: '3211',
-    sex: 'Male',
-    email: '4324@example.com',
-    phone: '446456422',
-    first_name: '321',
-    last_name: '32',
-    user_role: 'Student',
-    user_class: 'Class 1',
-    create_at: '2021-05-01',
-    score: '80',
-  },
-  {
-    user_id: 2,
-    username: '432',
-    sex: 'Male',
-    email: '321321@example.com',
-    phone: '4362784',
-    first_name: '32',
-    last_name: '123',
-    user_role: 'Student',
-    user_class: 'Class 1',
-    create_at: '2021-05-01',
-    score: '60',
-  },
-  // 可以添加更多用户...
-];
+const initialUsers: User[] = [];
 
 const Teacher_Class_Room = () => {
   const [users, setUsers] = useState<User[]>(initialUsers);
@@ -54,34 +29,33 @@ const Teacher_Class_Room = () => {
   const [formVisible, setFormVisible] = useState(false);
   const [newStudentId, setNewStudentId] = useState('');
 
-  // 查看用户信息
+  const classId = localStorage.getItem('classId');
+
+  useEffect(() => {
+    if (classId) {
+      axios.get(`/class/showStudentsByClassID?class_id=${classId}`).then((response) => {
+        setUsers(response.data.data);
+      }).catch((error) => {
+        console.error('Error fetching exams:', error);
+        message.error('获取学生列表失败');
+      });
+    }
+  }, [classId]);
+
   const handleViewUser = (user: User) => {
     setSelectedUser(user);
     setFormVisible(true);
   };
 
-  // 删除学生
   const handleDeleteStudent = (user_id: number) => {
     setUsers(users.filter(user => user.user_id !== user_id));
+    axios.delete(`/class/deleteStudentToClass?class_id=${classId}&user_id=${user_id}`);
   };
 
-  // 添加学生
+
   const handleAddStudent = () => {
     if (newStudentId && !users.some(user => user.user_id.toString() === newStudentId)) {
-      const newUser: User = {
-        user_id: parseInt(newStudentId, 10),
-        username: '4325324',
-        sex: 'FeMale',
-        email: '32131@example.com',
-        phone: '11133244666',
-        first_name: '2332',
-        last_name: '12323',
-        user_role: 'Student',
-        user_class: 'Class 1',
-        create_at: '2021-05-01',
-        score: undefined,
-      };
-      setUsers([...users, newUser]);
+      axios.get(`/class/addStudentToClass?class_id=${classId}&user_id=${newStudentId}`);
       setNewStudentId(''); // 清空输入框
     } else {
       alert('Student ID should be unique and not already in use.');

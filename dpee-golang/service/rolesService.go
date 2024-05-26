@@ -30,12 +30,12 @@ func CreateRoles() {
 
 // UpdateOneRoles 修改单个角色
 func UpdateOneRoles(c *gin.Context) {
-	account := c.PostForm("account")
-	role := c.PostForm("role")
+	account := c.Query("account")
+	role := c.Query("role")
 	accountInt, _ := strconv.Atoi(account)
 	db := global.DB
 	db.Model(&model.User{}).Where("user_id = ?", accountInt).Update("user_role", role)
-	db.Model(&model.Roles{}).Where("role_id = ?", accountInt).Update("role_name", role)
+	//db.Model(&model.Roles{}).Where("role_id = ?", accountInt).Update("role_name", role)
 	response.OkWithMessage("修改成功", c)
 }
 

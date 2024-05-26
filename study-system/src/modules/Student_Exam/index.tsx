@@ -4,6 +4,8 @@ import { Button, Card, Col, Form, Input, Row, Typography, message } from 'antd'
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import './index.scss'
+import dayjs, { Dayjs } from 'dayjs'; // 正确导入 Dayjs 类型
+import 'dayjs/locale/zh-cn'; // 导入所需的语言包，这里是中文
 import axios from 'axios'
 import { ExamResponse, ExamData } from '@/model/userAPI'
 
@@ -116,8 +118,8 @@ export default function Student_Exam() {
             <Card title={exam.exams_name}>
               <Row gutter={16}>
                 <Col span={12}>
-                  <Typography.Text>开始时间：{exam.start_time}</Typography.Text>
-                  <Typography.Text>结束时间：{exam.end_time}</Typography.Text>
+                  <Typography.Text>开始时间：{dayjs(exam.start_time).format('YYYY-MM-DD HH:mm:ss')}</Typography.Text>
+                  <Typography.Text>结束时间：{dayjs(exam.end_time).format('YYYY-MM-DD HH:mm:ss')}</Typography.Text>
                   <Typography.Text>考试时长：{exam.duration_minutes} 分钟</Typography.Text>
                 </Col>
                 <Col span={12}>
