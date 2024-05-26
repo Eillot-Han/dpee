@@ -1,11 +1,13 @@
 package service
 
 import (
+	"container/list"
 	"dpee-golang/global"
 	"dpee-golang/model"
 	"dpee-golang/model/response"
 	"encoding/csv"
 	"github.com/gin-gonic/gin"
+	"github.com/google/go-cmp/cmp"
 	"gorm.io/gorm"
 	"strconv"
 	"time"
@@ -75,22 +77,39 @@ func CorrectionAnswer(studentAnswer model.StudentAnswers, question model.Questio
 	db2 := global.TestDB
 	db := global.DB
 
+	var answer []list.List
+	var answer2 []list.List
 	//通过createTable创建一个临时表，createTable中是完整的建表sql
-	db2.Exec(question.CreateTable)
-	Answer1 := db2.Exec(studentAnswer.Answer)
-	db2.Exec(question.DeleteTable)
-	//创建一个临时表，然后插入studentAnswer的答案，然后插入question的答案
-	db2.Exec(question.CreateTable)
-	Answer2 := db2.Exec(question.Answer)
-	db2.Exec(question.DeleteTable)
-
-	if Answer1.RowsAffected == Answer2.RowsAffected {
-		//如果相等，则将pointsAwarded设置为points
-		db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", question.Points)
+	if cmp.Equal(studentAnswer.Answer[:6], "SELECT") || cmp.Equal(studentAnswer.Answer[:6], "select") {
+		db2.Exec(question.CreateTable)
+		db2.Raw(studentAnswer.Answer).Scan(answer)
+		db2.Exec(question.DeleteTable)
+		db2.Exec(question.CreateTable)
+		db2.Raw(question.Answer).Scan(answer2)
+		db2.Exec(question.DeleteTable)
+		if cmp.Equal(answer, answer2) {
+			//如果相等，则将pointsAwarded设置为points
+			db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", question.Points)
+		} else {
+			//如果不相等，则将pointsAwarded设置为0
+			db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", 0)
+		}
 	} else {
-		//如果不相等，则将pointsAwarded设置为0
-		db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", 0)
+		db2.Exec(question.CreateTable)
+		Answer1 := db2.Exec(studentAnswer.Answer)
+		db2.Exec(question.DeleteTable)
+		db2.Exec(question.CreateTable)
+		Answer2 := db2.Exec(question.Answer)
+		db2.Exec(question.DeleteTable)
+		if Answer1.RowsAffected == Answer2.RowsAffected {
+			//如果相等，则将pointsAwarded设置为points
+			db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", question.Points)
+		} else {
+			//如果不相等，则将pointsAwarded设置为0
+			db.Model(&studentAnswer).Where("student_answer_id = ?", studentAnswer.StudentAnswerID).Update("points_awarded", 0)
+		}
 	}
+
 }
 
 // UpdateScore 教师更改成绩
